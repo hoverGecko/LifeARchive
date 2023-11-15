@@ -18,17 +18,18 @@ import java.util.Date
 const val DATABASE_NAME = "diary"
 
 // Use example:
-// val database = DiaryEntryDatabase.getDatabase()
-// val dao = database.dao()
-// val entries = dao.getAll()
+// val diaryEntryDao = DiaryEntryDatabase.getDatabase(this@MainActivity).dao()
+// val entries = diaryEntryDao.getAll()
+// For supported functions of the dao, see interface DiaryEntryDao {...}
 
 @Entity
 data class DiaryEntry(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "content") val content: String? = null,
-    @ColumnInfo(name = "picture_paths") val pictures: List<String> = emptyList(),
-    @ColumnInfo(name = "voice_recording_path") val voiceRecordings: String? = null,
+    @ColumnInfo(name = "picture_paths") val picturePaths: List<String> = emptyList(),
+    @ColumnInfo(name = "voice_recording_path") val voiceRecording: String? = null,
+    @ColumnInfo(name = "ar_video_path") val arVideoPath: String? = null,
     @Embedded @ColumnInfo(name = "location") val location: Location? = null,
     @ColumnInfo(name = "date") val date: Date = Date()
 )
