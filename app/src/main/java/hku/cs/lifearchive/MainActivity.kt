@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-
+            loadFragment(AddEntryFragment())
         }
 
 
