@@ -24,7 +24,7 @@ const val DATABASE_NAME = "diary"
 
 @Entity
 data class DiaryEntry(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "content") val content: String? = null,
     @ColumnInfo(name = "picture_paths") val picturePaths: List<String> = emptyList(),
