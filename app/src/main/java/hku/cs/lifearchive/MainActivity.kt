@@ -1,5 +1,6 @@
 package hku.cs.lifearchive
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
-
+    private lateinit var fabmic: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         bottomBar = findViewById(R.id.BottomBar)
 
         fab = findViewById(R.id.fab)
-
+        fabmic = findViewById(R.id.fabmic)
 
         bottomBar.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
 
+        }
+        fabmic.setOnClickListener {
+            val intent = Intent(this, VoiceRecordingActivity::class.java)
+
+            startActivity(intent)
         }
 
 
