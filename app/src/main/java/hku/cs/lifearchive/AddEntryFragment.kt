@@ -1,11 +1,10 @@
 package hku.cs.lifearchive
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
 class AddEntryFragment : Fragment() {
 
@@ -20,12 +19,9 @@ class AddEntryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_add_entry, container, false)
+
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AddEntryViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+
 
 }

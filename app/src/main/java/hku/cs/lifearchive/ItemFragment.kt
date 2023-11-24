@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
+import java.util.Date
 
 /**
  * A fragment representing a list of Items.
@@ -33,7 +35,15 @@ class ItemFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
+        //test entry
+        diaryEntryDao.insertEntry(DiaryEntry(1,title="Check", content = "Content Test",
+            picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
+            arVideoPath = null, longitude = null, latitude = null, date = Date()
+        ))
         val allentry= diaryEntryDao.getAll()
+
+        println("tester")
+        println(allentry)
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {

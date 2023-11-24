@@ -12,11 +12,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //init bottom app bar
+
         loadFragment(ItemFragment())
 
         bottomBar = findViewById(R.id.BottomBar)
