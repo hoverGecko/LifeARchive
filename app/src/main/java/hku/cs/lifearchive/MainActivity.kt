@@ -1,6 +1,7 @@
 package hku.cs.lifearchive
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -49,7 +50,9 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    fun AddandBack(v: View?){
 
+    }
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
