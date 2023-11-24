@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import hku.cs.lifearchive.placeholder.PlaceholderContent
+import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
 /**
  * A fragment representing a list of Items.
@@ -19,6 +19,8 @@ class ItemFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // get database DAO
+        val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
@@ -30,7 +32,8 @@ class ItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
-
+        val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
+        val allentry= diaryEntryDao.getAll()
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
@@ -38,7 +41,8 @@ class ItemFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = MyItemRecyclerViewAdapter(allentry)
             }
         }
         return view

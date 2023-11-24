@@ -5,7 +5,6 @@ import android.location.Location
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -30,7 +29,7 @@ data class DiaryEntry(
     @ColumnInfo(name = "picture_paths") val picturePaths: List<String> = emptyList(),
     @ColumnInfo(name = "voice_recording_path") val voiceRecording: String? = null,
     @ColumnInfo(name = "ar_video_path") val arVideoPath: String? = null,
-    @Embedded @ColumnInfo(name = "location") val location: Location? = null,
+    @ColumnInfo(name = "location") val location: Location? = null,
     @ColumnInfo(name = "date") val date: Date = Date()
 )
 
