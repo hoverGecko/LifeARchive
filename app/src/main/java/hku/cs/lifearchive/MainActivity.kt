@@ -1,7 +1,15 @@
 package hku.cs.lifearchive
 
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
+import android.view.MenuInflater
+import android.view.View
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,12 +46,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val layout = findViewById<ConstraintLayout>(R.id.activity_main)
+        registerForContextMenu(layout)
+
+        // add entry menu button
+        registerForContextMenu(fab)
+
         fab.setOnClickListener {
-            loadFragment(AddEntryFragment())
+            val popup = PopupMenu(this, it)
+            val inflater: MenuInflater = popup.menuInflater
+            inflater.inflate(R.menu.add_entry_button_popup_menu, popup.menu)
+            popup.setOnMenuItemClickListener {item ->
+                when (item.itemId) {
+                    R.id.add_normal_entry -> {
+                        loadFragment(AddEntryFragment())
+                        true
+                    }
+                    R.id.add_recording_entry -> {
+                        Toast.makeText(this, "Add recording entry - To be implemented", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    R.id.add_ar_entry -> {
+                        Toast.makeText(this, "Add AR entry - To be implemented", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    else -> super.onOptionsItemSelected(item)
+                }
+            }
         }
 
 
     }
+
 
 
     private fun loadFragment(fragment: Fragment) {
