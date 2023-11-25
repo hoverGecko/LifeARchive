@@ -1,5 +1,6 @@
 package hku.cs.lifearchive
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -48,8 +49,14 @@ class MyItemRecyclerViewAdapter(
         holder.detailview.setOnClickListener{
             //TODO: make a view fragment for it
             println("position")
+            val bundle = Bundle()
+            bundle.putInt("id",item.id)
+
+            val Scroller = ScrollingFragment()
+            Scroller.arguments=bundle
+
             context1?.supportFragmentManager?.beginTransaction()
-                ?.replace(context1!!.findViewById<FrameLayout>(R.id.Frame).id,ScrollingFragment())
+                ?.replace(context1!!.findViewById<FrameLayout>(R.id.Frame).id,Scroller)
                 ?.commit();
         }
 
