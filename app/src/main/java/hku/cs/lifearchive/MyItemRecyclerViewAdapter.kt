@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import hku.cs.lifearchive.databinding.FragmentItemBinding
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
+import java.text.SimpleDateFormat
 
 
 /**
@@ -30,9 +31,10 @@ class MyItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
+
         holder.idView.text = item.title
         holder.contentView.text = item.content
-        holder.dateView.text = item.date.toString()
+        holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(item.date)
     }
 
     override fun getItemCount(): Int = values.size
@@ -42,7 +44,7 @@ class MyItemRecyclerViewAdapter(
         val contentView: TextView = binding.content
         val dateView: TextView = binding.date
 
-        override fun toString(): String {
+        fun toString2(): String {
             return super.toString() + " '" + contentView.text + "'"
         }
     }
