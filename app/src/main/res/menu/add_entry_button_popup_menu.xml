@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_normal_entry"
+        android:icon="@drawable/menu_24px"
+        android:title="@string/add_entry_button_popup_menu_normal" />
+    <item
+        android:id="@+id/add_recording_entry"
+        android:icon="@drawable/mic_24px"
+        android:title="@string/add_entry_button_popup_menu_recording" />
+    <item
+        android:id="@+id/add_ar_entry"
+        android:icon="@drawable/videocam_24px"
+        android:title="@string/add_entry_button_popup_menu_ar" />
+</menu>

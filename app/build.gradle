@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "hku.cs.lifearchive"
-        minSdk 28
+        minSdk 29
         targetSdk 33
         versionCode 1
         versionName "1.0"
