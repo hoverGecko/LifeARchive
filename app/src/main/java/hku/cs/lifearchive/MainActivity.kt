@@ -1,16 +1,12 @@
 package hku.cs.lifearchive
 
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.ContextMenu.ContextMenuInfo
+import android.view.Gravity
 import android.view.MenuInflater
-import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,10 +20,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
-        //init bottom app bar
         loadFragment(ItemFragment())
 
+        //init bottom app bar
         bottomBar = findViewById(R.id.BottomBar)
 
         fab = findViewById(R.id.fab)
@@ -56,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val popup = PopupMenu(this, it)
             popup.setForceShowIcon(true)
+            popup.gravity = Gravity.END
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.add_entry_button_popup_menu, popup.menu)
             popup.setOnMenuItemClickListener {item ->
