@@ -1,6 +1,7 @@
 package hku.cs.lifearchive
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuInflater
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -20,11 +21,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         //init bottom app bar
 
         loadFragment(ItemFragment())
 
+        //init bottom app bar
         bottomBar = findViewById(R.id.BottomBar)
 
         fab = findViewById(R.id.fab)
@@ -55,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val popup = PopupMenu(this, it)
             popup.setForceShowIcon(true)
+            popup.gravity = Gravity.END
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.add_entry_button_popup_menu, popup.menu)
             popup.setOnMenuItemClickListener { item ->
