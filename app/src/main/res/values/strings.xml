@@ -2,4 +2,9 @@
     <string name="app_name">LifeARchive</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string translatable="false" name="start_recording_button_text">START RECORDING</string>
+    <string translatable="false" name="stop_recording_button_text">STOP RECORDING</string>
+    <string translatable="false" name="playback_button_text">PLAYBACK</string>
+    <string translatable="false" name="playback_path_text">Playback: %1$s</string>
+    <string translatable="false" name="recording_path_text">Recording: %1$s</string>
 </resources>

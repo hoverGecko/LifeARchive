@@ -1,5 +1,6 @@
 package hku.cs.lifearchive
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //init bottom app bar
 
-        loadFragment(ItemFragment())
+       // loadFragment(ItemFragment())
 
         bottomBar = findViewById(R.id.BottomBar)
 
@@ -45,7 +46,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            loadFragment(AddEntryFragment())
+            //loadFragment(AddEntryFragment())
+            val intent = Intent(this, HelloRecordingPlaybackActivity::class.java)
+
+            startActivity(intent)
         }
 
 
