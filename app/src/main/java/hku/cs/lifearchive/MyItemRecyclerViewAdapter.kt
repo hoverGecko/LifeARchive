@@ -17,8 +17,9 @@ class MyItemRecyclerViewAdapter(
     private val values: List<DiaryEntry>
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    
         return ViewHolder(
             FragmentItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -35,7 +36,10 @@ class MyItemRecyclerViewAdapter(
         holder.idView.text = item.title
         //holder.contentView.text = item.content
         holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(item.date)
+
+
     }
+
 
     override fun getItemCount(): Int = values.size
 
@@ -43,6 +47,7 @@ class MyItemRecyclerViewAdapter(
         val idView: TextView = binding.itemNumber
         //val contentView: TextView = binding.content
         val dateView: TextView = binding.date
+
 
     }
 

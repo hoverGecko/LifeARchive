@@ -53,8 +53,12 @@ class ItemFragment : Fragment() {
                     else -> GridLayoutManager(context, columnCount)
                 }
                 //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
+
                 adapter = MyItemRecyclerViewAdapter(allentry)
+
+
             }
+
         }
         return view
     }
