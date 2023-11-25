@@ -45,9 +45,9 @@ class AddEntryFragment : Fragment() {
         val nowlata = view.findViewById<TextView>(R.id.LatView)
         val content = view.findViewById<TextInputLayout>(R.id.ContentInput)
         val dates = Date()
+        nowdate.text = dates.toString()
 
-
-
+        //TODO: find ways to get current longtitude and latitude
 
 
         button?.setOnClickListener {
