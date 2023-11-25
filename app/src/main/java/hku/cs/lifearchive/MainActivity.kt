@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.fragment.app.Fragment
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
             val popup = PopupMenu(this, it)
+            popup.setForceShowIcon(true)
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.add_entry_button_popup_menu, popup.menu)
             popup.setOnMenuItemClickListener {item ->
@@ -73,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     else -> super.onOptionsItemSelected(item)
                 }
             }
+            popup.show()
         }
 
 
