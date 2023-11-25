@@ -46,6 +46,8 @@ class ItemFragment : Fragment() {
         println("tester")
         println(allentry)
         // Set the adapter
+
+
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = when {
@@ -53,15 +55,16 @@ class ItemFragment : Fragment() {
                     else -> GridLayoutManager(context, columnCount)
                 }
                 //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
-
-                adapter = MyItemRecyclerViewAdapter(allentry)
-
-
+                adapter = MyItemRecyclerViewAdapter(allentry,activity)
             }
 
         }
         return view
+
+
+
     }
+
 
     companion object {
 

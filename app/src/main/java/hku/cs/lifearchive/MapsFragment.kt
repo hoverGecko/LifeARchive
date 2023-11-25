@@ -1,18 +1,16 @@
 package hku.cs.lifearchive
 
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
 class MapsFragment : Fragment() {
 
@@ -26,6 +24,16 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
+
+        val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
+        val allentry= diaryEntryDao.getAll()
+        for (entry in allentry){
+            val longs = entry.location?.longitude
+            val lats = entry.location?.latitude
+            googleMap.addMarker(MarkerOptions().position(LatLng(longs!!, lats!!)).title(entry.title))
+        }
+
+
         val sydney = LatLng(-34.0, 151.0)
         googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
