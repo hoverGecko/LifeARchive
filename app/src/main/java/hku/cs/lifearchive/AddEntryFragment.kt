@@ -51,6 +51,7 @@ class AddEntryFragment : Fragment() {
         val nowlata = view.findViewById<TextView>(R.id.LatView)
         val content = view.findViewById<TextInputLayout>(R.id.ContentInput)
         val dates = Date()
+        var nowlocation  = hku.cs.lifearchive.diaryentrymodel.Location()
         nowdate.text = dates.toString()
 
         //TODO: find ways to get current longtitude and latitude
@@ -77,8 +78,13 @@ class AddEntryFragment : Fragment() {
                 // Got last known location. In some rare situations this can be null.
                 if (location != null) {
                     println("success")
+                    nowlong.text = location.latitude.toString()
+                    nowlata.text = location.longitude.toString()
+                    nowlocation.latitude = location.latitude
+                    nowlocation.longitude = location.longitude
                     println(location.latitude)
                     println(location.longitude)
+
                 }else
                 {
                     println("null location")
@@ -89,10 +95,10 @@ class AddEntryFragment : Fragment() {
         button?.setOnClickListener {
             println(title.editText?.text)
 
-            diaryEntryDao.insertEntry(
+            diaryEntryDao.add(
                 DiaryEntry(title=title.editText?.text.toString(), content = content.editText?.text.toString(),
                 picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
-                arVideoPath = null, longitude = null, latitude = null, date = dates
+                arVideoPath = null, location = nowlocation, date = dates
             )
             )
             println("button Clicked")

@@ -33,7 +33,7 @@ class MyItemRecyclerViewAdapter(
         val item = values[position]
 
         holder.idView.text = item.title
-        holder.contentView.text = item.content
+        //holder.contentView.text = item.content
         holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(item.date)
     }
 
@@ -41,12 +41,9 @@ class MyItemRecyclerViewAdapter(
 
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+        //val contentView: TextView = binding.content
         val dateView: TextView = binding.date
 
-        fun toString2(): String {
-            return super.toString() + " '" + contentView.text + "'"
-        }
     }
 
 }
