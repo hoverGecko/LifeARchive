@@ -512,7 +512,9 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
             textView.setText(coloredAnchor.label);
             mainLayout.addView(textView);
            // textView.getBackground().setAlpha(100);
-           // textView.setBackgroundColor(Color.GRAY);
+            textView.setBackgroundColor(Color.DKGRAY);
+            textView.setAlpha(0.7f);
+            textView.setTextColor(Color.WHITE);
             textView.setX(finalTmpX);
             textView.setY(finalTmpY);
             mainLayout.bringChildToFront(textView);
