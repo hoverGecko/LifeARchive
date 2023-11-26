@@ -458,9 +458,9 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       // Visualize anchors created by tapping.
       float scaleFactor =.5f;
       for (ColoredAnchor coloredAnchor : anchors) {
-        if (coloredAnchor.anchor.getTrackingState() != TrackingState.TRACKING) {
-          continue;
-        }
+        //if (coloredAnchor.anchor.getTrackingState() != TrackingState.TRACKING) {
+        //  continue;
+        //}
         // Get the current pose of an Anchor in world space. The Anchor pose is updated
         // during calls to session.update() as ARCore refines its estimate of the world.
         coloredAnchor.anchor.getPose().toMatrix(anchorMatrix, 0);
@@ -550,7 +550,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private ColoredAnchor handleTap(Frame frame, Camera camera) {
     // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
     MotionEvent tap = tapHelper.poll();
-    if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
+    //if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
+    if (tap != null ) {
       for (HitResult hit : frame.hitTest(tap)) {
         // Check if any plane was hit, and if it was hit inside the plane polygon.
         Trackable trackable = hit.getTrackable();
@@ -631,8 +632,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private void recordAnchors(Session session, Frame frame, Camera camera) {
     if (!session.getRecordingStatus().equals(RecordingStatus.OK)) {
       // We do not record anchors created before we started recording.
-      anchorsToBeRecorded.clear();
-      return;
+    //  anchorsToBeRecorded.clear();
+     return;
     }
 
     Iterator<ColoredAnchor> anchorIterator = anchorsToBeRecorded.iterator();
@@ -663,6 +664,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       byte[] descsBytes = anchor.label.getBytes();
       buf.putInt(descsBytes.length);
       buf.put(descsBytes);
+
+      Log.i(TAG,"Recording"+anchor.label);
 
       try {
         frame.recordTrackData(ANCHOR_TRACK_ID, buf);
