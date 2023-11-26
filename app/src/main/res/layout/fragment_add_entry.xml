@@ -197,4 +197,16 @@
             tools:text="Enter Record path here" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/viewARbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="76dp"
+        android:text="View AR video"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

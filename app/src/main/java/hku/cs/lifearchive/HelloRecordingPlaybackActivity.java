@@ -104,7 +104,7 @@ import org.joda.time.DateTime;
 public class HelloRecordingPlaybackActivity extends AppCompatActivity
     implements GLSurfaceView.Renderer {
   // Application states.
-  private enum AppState {
+   enum AppState {
     IDLE,
     RECORDING,
     PLAYBACK
@@ -117,8 +117,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private static final String MP4_DATASET_TIMESTAMP_FORMAT = "yyyy-MM-dd-HH-mm-ss";
 
   // Keys to keep track of the active dataset and playback state between restarts.
-  private static final String DESIRED_DATASET_PATH_KEY = "desired_dataset_path_key";
-  private static final String DESIRED_APP_STATE_KEY = "desired_app_state_key";
+   static final String DESIRED_DATASET_PATH_KEY = "desired_dataset_path_key";
+   static final String DESIRED_APP_STATE_KEY = "desired_app_state_key";
   private static final int PERMISSIONS_REQUEST_CODE = 0;
 
   // Recording and playback requires android.permission.WRITE_EXTERNAL_STORAGE and
@@ -149,7 +149,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private TextView recordingPlaybackPathTextView;
 
   private Session session;
-  private final SnackbarHelper messageSnackbarHelper = new SnackbarHelper();
+
   private DisplayRotationHelper displayRotationHelper;
   private final TrackingStateHelper trackingStateHelper = new TrackingStateHelper(this);
   private TapHelper tapHelper;
@@ -283,7 +283,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       }
 
       if (message != null) {
-        messageSnackbarHelper.showError(this, message + " " + exception);
+
         Log.e(TAG, "Exception creating session", exception);
         return;
       }
@@ -294,7 +294,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       // Playback will now start if an MP4 dataset has been set.
       session.resume();
     } catch (CameraNotAvailableException e) {
-      messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.");
+
       session = null;
       return;
     }
@@ -417,8 +417,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
       // If not tracking, don't draw 3D objects, show tracking failure reason instead.
       if (camera.getTrackingState() == TrackingState.PAUSED) {
-        messageSnackbarHelper.showMessage(
-            this, TrackingStateHelper.getTrackingFailureReasonString(camera));
+
         return;
       }
 
@@ -445,11 +444,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
       // No tracking failure at this point. If we detected any planes, then hide the
       // message UI. If not planes detected, show searching planes message.
-      if (hasTrackingPlane()) {
-        messageSnackbarHelper.hide(this);
-      } else {
-        messageSnackbarHelper.showMessage(this, SEARCHING_PLANE_MESSAGE);
-      }
+
 
       // Visualize detected planes.
       planeRenderer.drawPlanes(
@@ -705,6 +700,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       byte[] bytes = new byte[len];
       payload.get(bytes);
       String label = new String(bytes);
+      Log.i(TAG,"read"+label);
 
       // Transform the recorded anchor pose in the camera coordinate frame back into world
       // coordinates.
@@ -759,7 +755,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       } catch (PlaybackFailedException e) {
         String errorMsg = "Failed to set playback MP4 dataset. " + e;
         Log.e(TAG, errorMsg, e);
-        messageSnackbarHelper.showError(this, errorMsg);
+
         Log.d(TAG, "Setting app state to IDLE, as the playback is not in progress.");
         setStateAndUpdateUI(AppState.IDLE);
         return;
@@ -849,7 +845,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     } catch (RecordingFailedException e) {
       String errorMessage = "Failed to start recording. " + e;
       Log.e(TAG, errorMessage, e);
-      messageSnackbarHelper.showError(this, errorMessage);
+
       return;
     }
     if (session.getRecordingStatus() != RecordingStatus.OK) {
@@ -867,7 +863,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     } catch (RecordingFailedException e) {
       String errorMessage = "Failed to stop recording. " + e;
       Log.e(TAG, errorMessage, e);
-      messageSnackbarHelper.showError(this, errorMessage);
+
       return;
     }
     if (session.getRecordingStatus() == RecordingStatus.OK) {
@@ -878,6 +874,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     if (new File(lastRecordingDatasetPath).exists()) {
       playbackDatasetPath = lastRecordingDatasetPath;
       Log.d(TAG, "MP4 dataset has been saved at: " + playbackDatasetPath);
+      sendRecordedPathToEntry();
     } else {
       logAndShowErrorMessage(
           "Recording failed. File " + lastRecordingDatasetPath + " wasn't created.");
@@ -885,10 +882,16 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     setStateAndUpdateUI(AppState.IDLE);
   }
 
+  private void sendRecordedPathToEntry(){
+    Intent myIntent = new Intent(this, MainActivity.class);
+    myIntent.putExtra("arVideoPath",playbackDatasetPath);
+    startActivity(myIntent);
+  }
+
   /** Helper function to log error message and show it on the screen. */
   private void logAndShowErrorMessage(String errorMessage) {
     Log.e(TAG, errorMessage);
-    messageSnackbarHelper.showError(this, errorMessage);
+
   }
 
   /** Helper function to set state and update UI. */
@@ -908,8 +911,17 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
   /** Performs action when close_playback button is clicked. */
   private void stopPlayback() {
-    currentState.set(AppState.IDLE);
-    restartActivityWithIntentExtras();
+    Bundle bundle = getIntent().getExtras();
+
+    if(bundle.containsKey("fromAddEntry")){
+      // return to AddEntry
+      this.finish();
+    }else{
+      // return to video taking screen
+      currentState.set(AppState.IDLE);
+      restartActivityWithIntentExtras();
+    }
+
   }
 
   /** Checks the playback is in progress without issues. */

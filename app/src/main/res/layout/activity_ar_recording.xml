@@ -84,6 +84,7 @@
       android:id="@+id/recording_playback_path"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:visibility="invisible"
       android:textSize="12sp"
       android:padding="10dp"
       android:layout_below="@id/buttons_panel"/>
