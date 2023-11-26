@@ -31,14 +31,10 @@ data class DiaryEntry(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "content") val content: String? = null,
-
     @ColumnInfo(name = "picture_paths") val picturePaths: List<String> = emptyList(),
-
     @ColumnInfo(name = "voice_recording_path") val voiceRecording: String? = null,
     @ColumnInfo(name = "ar_video_path") val arVideoPath: String? = null,
-
     @Embedded(prefix = "location") val location: Location? = null,
-
     @ColumnInfo(name = "date") val date: Date = Date()
 )
 

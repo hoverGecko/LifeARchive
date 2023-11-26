@@ -17,11 +17,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        //init bottom app bar
+
         loadFragment(ItemFragment())
 
         //init bottom app bar
@@ -36,10 +39,13 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(ItemFragment())
                     true
                 }
+
                 R.id.menu_map -> {
                     loadFragment(MapsFragment())
+
                     true
                 }
+
                 else -> false
             }
         }
@@ -56,20 +62,28 @@ class MainActivity : AppCompatActivity() {
             popup.gravity = Gravity.END
             val inflater: MenuInflater = popup.menuInflater
             inflater.inflate(R.menu.add_entry_button_popup_menu, popup.menu)
-            popup.setOnMenuItemClickListener {item ->
+            popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.add_normal_entry -> {
                         loadFragment(AddEntryFragment())
                         true
                     }
+
                     R.id.add_recording_entry -> {
-                        Toast.makeText(this, "Add recording entry - To be implemented", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Add recording entry - To be implemented",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         true
                     }
+
                     R.id.add_ar_entry -> {
-                        Toast.makeText(this, "Add AR entry - To be implemented", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Add AR entry - To be implemented", Toast.LENGTH_SHORT)
+                            .show()
                         true
                     }
+
                     else -> super.onOptionsItemSelected(item)
                 }
             }
@@ -78,7 +92,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
 
 
     private fun loadFragment(fragment: Fragment) {
