@@ -60,6 +60,7 @@ class AddEntryFragment() : Fragment() {
         val nowdate = view.findViewById<TextView>(R.id.Dateview)
         val nowlong = view.findViewById<TextView>(R.id.LongView)
         val nowlata = view.findViewById<TextView>(R.id.LatView)
+        val ARPath = view.findViewById<TextView>(R.id.ARpath)
         val content = view.findViewById<TextInputLayout>(R.id.ContentInput)
         val dates = Date()
         var nowlocation  = hku.cs.lifearchive.diaryentrymodel.Location()
@@ -125,7 +126,9 @@ class AddEntryFragment() : Fragment() {
         // from ar screen: video is recorded, show replay btn
 
         if(arVideoPath!=null){
+            ARPath.text = arVideoPath
             ARbutton.visibility =View.VISIBLE
+
             ARbutton?.setOnClickListener {
                 val intent = Intent(activity, HelloRecordingPlaybackActivity::class.java)
                 val bundle = Bundle()
