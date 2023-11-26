@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_map -> {
                     loadFragment(MapsFragment())
+
                     true
                 }
 

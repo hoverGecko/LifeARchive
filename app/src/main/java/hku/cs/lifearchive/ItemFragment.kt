@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,21 +42,37 @@ class ItemFragment : Fragment() {
             picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
             arVideoPath = null, location = Location(), date = Date()
         ))
-        val allentry= diaryEntryDao.getAll()
+        val datesorters = activity?.findViewById<Button>(R.id.Datesort)
+        val titlesorters = activity?.findViewById<Button>(R.id.Titlesort)
+        val allentry= diaryEntryDao.getAll().toMutableList()
 
         println("tester")
         println(allentry)
         // Set the adapter
 
 
+
         if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
+            with(view) { layoutManager = when {columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
                 //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
                 adapter = MyItemRecyclerViewAdapter(allentry,activity)
+
+                if (datesorters != null) {
+                    datesorters.setOnClickListener{
+                        allentry.sortBy {it.date}
+                        println("timesorted")
+                        println(allentry)
+                        adapter = MyItemRecyclerViewAdapter(allentry,activity)
+                    }
+                }
+                if (titlesorters != null) {
+                    titlesorters.setOnClickListener{
+                        allentry.sortBy {it.title}
+                        println("titlesorted")
+                        println(allentry)
+                        adapter = MyItemRecyclerViewAdapter(allentry,activity)
+                    }
+                }
             }
 
         }
