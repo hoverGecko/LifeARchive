@@ -17,18 +17,24 @@
 package hku.cs.lifearchive;
 
 import android.Manifest.permission;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -166,10 +172,12 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private static class ColoredAnchor {
     public final Anchor anchor;
     public final float[] color;
+    public String label;
 
-    public ColoredAnchor(Anchor a, float[] color4f) {
+    public ColoredAnchor(Anchor a, float[] color4f, String label) {
       this.anchor = a;
       this.color = color4f;
+      this.label=label;
     }
   }
 
@@ -178,12 +186,20 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
   private boolean installRequested;
 
+  private int width, height;
+  private RelativeLayout mainLayout;
+  public static HelloRecordingPlaybackActivity helloRecordingPlaybackActivity;
+  public ArrayList<TextView> labels = new ArrayList<>();
+  public ArrayList<TextView> labelsNext = new ArrayList<>();
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadInternalStateFromIntentExtras();
 
     setContentView(R.layout.activity_ar_recording);
+    helloRecordingPlaybackActivity=this;
+    mainLayout = findViewById(R.id.arlayout);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
 
@@ -211,6 +227,13 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     startPlaybackButton.setOnClickListener(view -> startPlayback());
     stopPlaybackButton.setOnClickListener(view -> stopPlayback());
     updateUI();
+
+
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+     height = displayMetrics.heightPixels;
+     width = displayMetrics.widthPixels;
+
   }
 
   @Override
@@ -331,7 +354,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       planeRenderer.createOnGlThread(/*context=*/ this, "models/trigrid.png");
       pointCloudRenderer.createOnGlThread(/*context=*/ this);
 
-      virtualObject.createOnGlThread(/*context=*/ this, "models/map_quality_bar.obj", "models/map_quality_bar.png");
+      virtualObject.createOnGlThread(/*context=*/ this, "models/anchor.obj", "models/anchor.png");
       virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
 
       virtualObjectShadow.createOnGlThread(
@@ -377,7 +400,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       ColoredAnchor anchor = handleTap(frame, camera);
       if (anchor != null) {
         // If we created an anchor, then try to record it.
-        anchorsToBeRecorded.add(anchor);
+
       }
 
       // Try to record any anchors that have not been recorded yet.
@@ -433,7 +456,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
           session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
 
       // Visualize anchors created by tapping.
-      float scaleFactor = 1.0f;
+      float scaleFactor =.5f;
       for (ColoredAnchor coloredAnchor : anchors) {
         if (coloredAnchor.anchor.getTrackingState() != TrackingState.TRACKING) {
           continue;
@@ -447,7 +470,73 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
         virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
         virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba, coloredAnchor.color);
         virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba, coloredAnchor.color);
+
+
+        // by Henry: add text view
+        // viewmtx = modelmx
+        float[] model = viewmtx;
+        Pose anchorPose =  coloredAnchor.anchor.getPose();
+        float tX =
+                model[0] * anchorPose.tx() + model[4] * anchorPose.ty() + model[8] * anchorPose.tz() + model[12] * 1f;
+        float tY =
+                model[1] * anchorPose.tx() + model[5] * anchorPose.ty() + model[9] * anchorPose.tz() + model[13] * 1f;
+        float tZ =
+                model[2] * anchorPose.tx() + model[6] * anchorPose.ty() + model[10] * anchorPose.tz() + model[14] * 1f;
+        float tW =
+                model[3] * anchorPose.tx() + model[7] * anchorPose.ty() + model[11] * anchorPose.tz() + model[15] * 1f;
+        float tmpX = projmtx[0] * tX + projmtx[4] * tY + projmtx[8] * tZ + projmtx[12] * tW;
+        float tmpY = projmtx[1] * tX + projmtx[5] * tY + projmtx[9] * tZ +projmtx[13] * tW;
+        float tmpZ =
+                projmtx[2] * tX + projmtx[6] * tY + projmtx[10] * tZ + projmtx[14] * tW;
+        float tmpW =
+                projmtx[3] * tX +projmtx[7] * tY + projmtx[11]* tZ + projmtx[15]* tW;
+        tmpX /= tmpW;
+        tmpY /= tmpW;
+        tmpZ /= tmpW;
+        tmpX = tmpX * 0.5f + 0.5f;
+        tmpY = tmpY * 0.5f + 0.5f;
+        tmpZ = tmpZ * 0.5f + 0.5f;
+        tmpX = tmpX * width + 0.0f; // to obtain width and height see third step
+        tmpY = tmpY * height + 0.0f;
+
+        float finalTmpX = tmpX;
+        float finalTmpY = height - tmpY; // reversed?
+        runOnUiThread(new Runnable() {
+
+          @Override
+          public void run() {
+            // Stuff that updates the UI
+            TextView textView = new TextView(helloRecordingPlaybackActivity);
+
+
+            textView.setText(coloredAnchor.label);
+            mainLayout.addView(textView);
+           // textView.getBackground().setAlpha(100);
+           // textView.setBackgroundColor(Color.GRAY);
+            textView.setX(finalTmpX);
+            textView.setY(finalTmpY);
+            mainLayout.bringChildToFront(textView);
+
+            labelsNext.add(textView);
+          }
+        });
+       //Log.i(TAG,Float.toString(tmpX) +' '+Float.toString(tmpY));
+
       }
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          //clean up first
+          for(TextView i : labels){
+            mainLayout.removeView(i);
+          }
+          labels.clear();
+
+          labels.addAll(labelsNext);
+          labelsNext.clear();
+
+        }
+      });
 
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
@@ -489,11 +578,41 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
             objColor = DEFAULT_COLOR;
           }
 
-          ColoredAnchor anchor = new ColoredAnchor(hit.createAnchor(), objColor);
+          ColoredAnchor anchor = new ColoredAnchor(hit.createAnchor(), objColor, "test");
           // Adding an Anchor tells ARCore that it should track this position in
           // space. This anchor is created on the Plane to place the 3D model
           // in the correct position relative both to the world and to the plane.
-          anchors.add(anchor);
+          runOnUiThread(new Runnable() {
+
+                          @Override
+                          public void run() {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(helloRecordingPlaybackActivity);
+
+                            alert.setTitle("Add an anchor");
+
+                            final EditText input = new EditText(helloRecordingPlaybackActivity);
+                            alert.setView(input);
+                            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                              public void onClick(DialogInterface dialog, int whichButton) {
+                                anchor.label = String.valueOf(input.getText());
+                                anchorsToBeRecorded.add(anchor);
+                                anchors.add(anchor);
+                                // Do something with value!
+                              }
+                            });
+
+                            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                              public void onClick(DialogInterface dialog, int whichButton) {
+                                // Canceled.
+                              }
+                            });
+
+                            alert.show();
+
+                          }
+                        });
+
+
           return anchor;
         }
       }
@@ -522,15 +641,29 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       Pose pose = camera.getPose().inverse().compose(anchor.anchor.getPose());
       float[] translation = pose.getTranslation();
       float[] quaternion = pose.getRotationQuaternion();
-      ByteBuffer payload =
-          ByteBuffer.allocate(4 * (translation.length + quaternion.length + anchor.color.length));
-      FloatBuffer floatView = payload.asFloatBuffer();
-      floatView.put(translation);
-      floatView.put(quaternion);
-      floatView.put(anchor.color);
+
+      ByteBuffer buf = ByteBuffer.allocate(1024);
+
+      buf.putFloat(translation[0]);
+      buf.putFloat(translation[1]);
+      buf.putFloat(translation[2]);
+      buf.putFloat(quaternion[0]);
+      buf.putFloat(quaternion[1]);
+      buf.putFloat(quaternion[2]);
+      buf.putFloat(quaternion[3]);
+      buf.putFloat(anchor.color[0]);
+      buf.putFloat(anchor.color[1]);
+      buf.putFloat(anchor.color[2]);
+      buf.putFloat(anchor.color[3]);
+
+
+
+      byte[] descsBytes = anchor.label.getBytes();
+      buf.putInt(descsBytes.length);
+      buf.put(descsBytes);
 
       try {
-        frame.recordTrackData(ANCHOR_TRACK_ID, payload);
+        frame.recordTrackData(ANCHOR_TRACK_ID, buf);
         anchorIterator.remove();
       } catch (IllegalStateException e) {
         Log.e(TAG, "Could not record anchor into external data track.", e);
@@ -548,15 +681,30 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       float[] quaternion = new float[4];
       float[] color = new float[4];
 
-      FloatBuffer floatView = payload.asFloatBuffer();
-      floatView.get(translation);
-      floatView.get(quaternion);
-      floatView.get(color);
+
+      translation[0] = payload.getFloat();
+      translation[1] = payload.getFloat();
+      translation[2] = payload.getFloat();
+      quaternion[0] = payload.getFloat();
+      quaternion[1] = payload.getFloat();
+      quaternion[2] = payload.getFloat();
+      quaternion[3] = payload.getFloat();
+      color[0] = payload.getFloat();
+      color[1] = payload.getFloat();
+      color[2] = payload.getFloat();
+      color[3] = payload.getFloat();
+
+
+
+      int len = payload.getInt();
+      byte[] bytes = new byte[len];
+      payload.get(bytes);
+      String label = new String(bytes);
 
       // Transform the recorded anchor pose in the camera coordinate frame back into world
       // coordinates.
       Pose pose = camera.getPose().compose(new Pose(translation, quaternion));
-      ColoredAnchor anchor = new ColoredAnchor(session.createAnchor(pose), color);
+      ColoredAnchor anchor = new ColoredAnchor(session.createAnchor(pose), color, label);
       anchors.add(anchor);
     }
   }
