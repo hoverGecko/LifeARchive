@@ -1,12 +1,11 @@
 package hku.cs.lifearchive
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Gravity
 import android.view.MenuInflater
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
@@ -17,16 +16,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
 
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //init bottom app bar
         loadFragment(ItemFragment())
-
+        //init bottom app bar
         bottomBar = findViewById(R.id.BottomBar)
 
         fab = findViewById(R.id.fab)
+
 
         bottomBar.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -34,10 +37,12 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(ItemFragment())
                     true
                 }
+
                 R.id.menu_map -> {
                     loadFragment(MapsFragment())
                     true
                 }
+
                 else -> false
             }
         }
@@ -68,8 +73,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.add_ar_entry -> {
-                        Toast.makeText(this, "Add AR entry - To be implemented", Toast.LENGTH_SHORT)
-                            .show()
+                        val intent = Intent(this, HelloRecordingPlaybackActivity::class.java)
+                        startActivity(intent)
                         true
                     }
 
@@ -78,10 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
             popup.show()
         }
-
-
     }
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
