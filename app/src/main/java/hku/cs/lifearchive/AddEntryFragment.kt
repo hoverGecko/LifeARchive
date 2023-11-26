@@ -9,18 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
+import java.security.Permissions
 import java.util.Date
 
 class AddEntryFragment : Fragment() {
 
-
+    val rc = 1
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -54,6 +57,7 @@ class AddEntryFragment : Fragment() {
         var nowlocation  = hku.cs.lifearchive.diaryentrymodel.Location()
         nowdate.text = dates.toString()
 
+
         //TODO: find ways to get current longtitude and latitude
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -70,6 +74,7 @@ class AddEntryFragment : Fragment() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(requireActivity(),arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), rc)
             return
         }
         fusedLocationClient.lastLocation
@@ -107,6 +112,19 @@ class AddEntryFragment : Fragment() {
 
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == rc)  {
+            if (grantResults.size > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(activity, "Location permissions granted", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
     private fun loadFragment(fragment: Fragment){
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.replace(this.id, fragment)
