@@ -28,6 +28,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -83,6 +84,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -138,7 +141,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
   // The app state so that it can be preserved when the activity restarts. This is also used to
   // update the UI.
-  private final AtomicReference<AppState> currentState = new AtomicReference<>(AppState.IDLE);
+  private  AtomicReference<AppState> currentState = new AtomicReference<>(AppState.IDLE);
 
   private String playbackDatasetPath;
   private String lastRecordingDatasetPath;
@@ -151,19 +154,19 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   private Session session;
 
   private DisplayRotationHelper displayRotationHelper;
-  private final TrackingStateHelper trackingStateHelper = new TrackingStateHelper(this);
+  private  TrackingStateHelper trackingStateHelper = new TrackingStateHelper(this);
   private TapHelper tapHelper;
   private GLSurfaceView surfaceView;
 
   // The Renderers are created here, and initialized when the GL surface is created.
-  private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
-  private final ObjectRenderer virtualObject = new ObjectRenderer();
-  private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
-  private final PlaneRenderer planeRenderer = new PlaneRenderer();
-  private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
+  private  BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
+  private  ObjectRenderer virtualObject = new ObjectRenderer();
+  private  ObjectRenderer virtualObjectShadow = new ObjectRenderer();
+  private  PlaneRenderer planeRenderer = new PlaneRenderer();
+  private  PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
 
   // Temporary matrix allocated here to reduce number of allocations for each frame.
-  private final float[] anchorMatrix = new float[16];
+  private  float[] anchorMatrix = new float[16];
   private static final float[] DEFAULT_COLOR = new float[] {0f, 0f, 0f, 0f};
 
   private static final String SEARCHING_PLANE_MESSAGE = "Searching for surfaces...";
@@ -181,8 +184,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     }
   }
 
-  private final ArrayList<ColoredAnchor> anchors = new ArrayList<>();
-  private final ArrayList<ColoredAnchor> anchorsToBeRecorded = new ArrayList<>();
+  private  ArrayList<ColoredAnchor> anchors = new ArrayList<>();
+  private  ArrayList<ColoredAnchor> anchorsToBeRecorded = new ArrayList<>();
 
   private boolean installRequested;
 
@@ -195,7 +198,21 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    labels = new ArrayList<>();
+    labelsNext = new ArrayList<>();
+    anchors = new ArrayList<>();
+    anchorsToBeRecorded = new ArrayList<>();
+   anchorMatrix = new float[16];
+
+    currentState = new AtomicReference<>(AppState.IDLE);
     loadInternalStateFromIntentExtras();
+    backgroundRenderer = new BackgroundRenderer();
+    virtualObject = new ObjectRenderer();
+    virtualObjectShadow = new ObjectRenderer();
+    planeRenderer = new PlaneRenderer();
+    pointCloudRenderer = new PointCloudRenderer();
+    trackingStateHelper = new TrackingStateHelper(this);
 
     setContentView(R.layout.activity_ar_recording);
     helloRecordingPlaybackActivity=this;
@@ -453,9 +470,9 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
       // Visualize anchors created by tapping.
       float scaleFactor =.5f;
       for (ColoredAnchor coloredAnchor : anchors) {
-        //if (coloredAnchor.anchor.getTrackingState() != TrackingState.TRACKING) {
-        //  continue;
-        //}
+        if (coloredAnchor.anchor.getTrackingState() != TrackingState.TRACKING) {
+          continue;
+        }
         // Get the current pose of an Anchor in world space. The Anchor pose is updated
         // during calls to session.update() as ARCore refines its estimate of the world.
         coloredAnchor.anchor.getPose().toMatrix(anchorMatrix, 0);
@@ -546,7 +563,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
     MotionEvent tap = tapHelper.poll();
     //if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
-    if (tap != null ) {
+    if (tap != null&& camera.getTrackingState() == TrackingState.TRACKING ) {
       for (HitResult hit : frame.hitTest(tap)) {
         // Check if any plane was hit, and if it was hit inside the plane polygon.
         Trackable trackable = hit.getTrackable();
@@ -704,9 +721,22 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
       // Transform the recorded anchor pose in the camera coordinate frame back into world
       // coordinates.
-      Pose pose = camera.getPose().compose(new Pose(translation, quaternion));
-      ColoredAnchor anchor = new ColoredAnchor(session.createAnchor(pose), color, label);
-      anchors.add(anchor);
+      try {
+        Pose pose = camera.getPose().compose(new Pose(translation, quaternion));
+        ColoredAnchor anchor = new ColoredAnchor(session.createAnchor(pose), color, label);
+        anchors.add(anchor);
+      }catch (Exception e){
+        new Timer().schedule(new TimerTask() {
+          @Override
+          public void run() {
+            // this code will be executed after 2 seconds
+            addRecordedAnchors( session,  frame,  camera);
+          }
+        }, 200);
+
+        Log.e(TAG,e.toString());
+        return;
+      }
     }
   }
 
