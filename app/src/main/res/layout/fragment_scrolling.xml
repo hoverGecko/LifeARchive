@@ -28,6 +28,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/averia_serif_libre_light"
                 android:text="Title of Entry" />
 
             <TextView
@@ -40,6 +41,7 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/averia_serif_libre_light"
                 android:text="Content of Entry" />
 
             <TextView
@@ -52,6 +54,7 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/averia_serif_libre_light"
                 android:text="Recording" />
 
             <Button

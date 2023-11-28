@@ -30,13 +30,14 @@ class MapsFragment : Fragment() {
         for (entry in allentry){
             val longs = entry.location?.longitude
             val lats = entry.location?.latitude
-            googleMap.addMarker(MarkerOptions().position(LatLng(longs!!, lats!!)).title(entry.title))
+            val positions =  LatLng(lats!!, longs!!)
+
+            googleMap.addMarker(MarkerOptions().position(positions).title(entry.title))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positions, 10.0F))
         }
 
 
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
     }
 
     override fun onCreateView(
