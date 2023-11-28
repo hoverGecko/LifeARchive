@@ -1,16 +1,16 @@
 package hku.cs.lifearchive
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Gravity
 import android.view.MenuInflater
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,15 +18,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
 
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-        //init bottom app bar
-
         loadFragment(ItemFragment())
-
         //init bottom app bar
         bottomBar = findViewById(R.id.BottomBar)
 
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_map -> {
                     loadFragment(MapsFragment())
-
                     true
                 }
 
@@ -70,17 +68,14 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.add_recording_entry -> {
-                        Toast.makeText(
-                            this,
-                            "Add recording entry - To be implemented",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val intent = Intent(this, VoiceRecordingActivity::class.java)
+                        startActivity(intent)
                         true
                     }
 
                     R.id.add_ar_entry -> {
-                        Toast.makeText(this, "Add AR entry - To be implemented", Toast.LENGTH_SHORT)
-                            .show()
+                        val intent = Intent(this, HelloRecordingPlaybackActivity::class.java)
+                        startActivity(intent)
                         true
                     }
 
@@ -90,9 +85,20 @@ class MainActivity : AppCompatActivity() {
             popup.show()
         }
 
+        // by Henry: to receive the AR video path just recorded and send to fragment
+        if(intent.hasExtra("arVideoPath")){
+            var bundle :Bundle ?=intent.extras
+            var arVideoPath = bundle!!.getString("arVideoPath","") // 1
+            Log.i("SS",arVideoPath!!);
+            loadFragment(  AddEntryFragment.newInstance(arVideoPath))
+
+        }else if(intent.hasExtra("title")){
+            var bundle :Bundle ?=intent.extras
+            var title = bundle!!.getString("title","") // 1
+            loadFragment(  AddEntryFragment.newInstance("",title))
+        }
 
     }
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()

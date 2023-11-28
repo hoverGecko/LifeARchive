@@ -9,10 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
-import hku.cs.lifearchive.diaryentrymodel.Location
-import java.util.Date
 
 /**
  * A fragment representing a list of Items.
@@ -38,10 +35,7 @@ class ItemFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
         //test entry
-        diaryEntryDao.add(DiaryEntry(1,title="Check", content = "Content Test",
-            picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
-            arVideoPath = null, location = Location(), date = Date()
-        ))
+
         val datesorters = activity?.findViewById<Button>(R.id.Datesort)
         val titlesorters = activity?.findViewById<Button>(R.id.Titlesort)
         val allentry= diaryEntryDao.getAll().toMutableList()
