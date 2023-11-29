@@ -94,6 +94,7 @@ class AddVoiceRecordingEntryActivity : AppCompatActivity() {
                 val myIntent = Intent(this, AddTextEntryActivity::class.java)
                 myIntent.putExtra("title",  Objects.requireNonNull(res)[0])
                 startActivity(myIntent)
+                finish()
             }
         }
     }

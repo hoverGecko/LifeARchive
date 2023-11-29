@@ -986,6 +986,7 @@ public class AddAREntryActivity extends AppCompatActivity
         Intent myIntent = new Intent(this, AddTextEntryActivity.class);
         myIntent.putExtra("arVideoPath", playbackDatasetPath);
         startActivity(myIntent);
+        this.finish();
     }
 
     /**
