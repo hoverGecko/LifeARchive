@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_normal_entry"
+        android:icon="@drawable/baseline_android_24"
+        android:iconTint="@color/white"
+        android:title="@string/change_anchor_model_menu_andy" />
+    <item
+        android:id="@+id/add_recording_entry"
+        android:icon="@drawable/baseline_anchor_24"
+        android:iconTint="@color/white"
+        android:title="@string/change_anchor_model_menu_anchor" />
+    <item
+        android:id="@+id/add_ar_entry"
+        android:icon="@drawable/baseline_horizontal_rule_24"
+        android:iconTint="@color/white"
+        android:title="@string/change_anchor_model_menu_bar" />
+</menu>

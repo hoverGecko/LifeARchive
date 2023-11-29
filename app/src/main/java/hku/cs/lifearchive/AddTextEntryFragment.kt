@@ -1,6 +1,7 @@
 package hku.cs.lifearchive
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -27,7 +28,19 @@ class AddTextEntryFragment : Fragment() {
 
     companion object {
         fun newInstance() = AddTextEntryFragment()
+
+        fun newInstance(arVideoPath: String?=null,title:String?=null): AddTextEntryFragment {
+            val f = AddTextEntryFragment ()
+            val args = Bundle()
+            args.putString("arVideoPath", arVideoPath)
+            args.putString("title", title)
+            f.setArguments(args)
+            return f
+        }
     }
+
+
+
 
     override fun onCreateView(
 
@@ -43,10 +56,12 @@ class AddTextEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
         val button= view.findViewById<Button>(R.id.Add)
+        val ARbutton= view.findViewById<Button>(R.id.viewARbtn)
         val title= view.findViewById<TextInputLayout>(R.id.TitleInput)
         val nowdate = view.findViewById<TextView>(R.id.Dateview)
         val nowlong = view.findViewById<TextView>(R.id.LongView)
         val nowlata = view.findViewById<TextView>(R.id.LatView)
+        val ARPath = view.findViewById<TextView>(R.id.ARpath)
         val content = view.findViewById<TextInputLayout>(R.id.ContentInput)
         val dates = Date()
         var nowlocation  = hku.cs.lifearchive.diaryentrymodel.Location()
@@ -91,6 +106,10 @@ class AddTextEntryFragment : Fragment() {
                 }
             }
 
+        // nullable
+        var arVideoPath = arguments?.getString("arVideoPath");
+        var voiceRecordedTitle = arguments?.getString("title");
+
 
         button?.setOnClickListener {
             println(title.editText?.text)
@@ -98,12 +117,45 @@ class AddTextEntryFragment : Fragment() {
             diaryEntryDao.add(
                 DiaryEntry(title=title.editText?.text.toString(), content = content.editText?.text.toString(),
                     picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
-                    arVideoPath = null, location = nowlocation, date = dates
+                arVideoPath = arVideoPath, location = nowlocation, date = dates
                 )
             )
             println("button Clicked")
 
             activity?.finish()
+        }
+
+        // from ar screen: video is recorded, show replay btn
+
+        if(arVideoPath!=null){
+            ARPath.text = arVideoPath
+            ARbutton.visibility =View.VISIBLE
+
+            ARbutton?.setOnClickListener {
+                val intent = Intent(activity, AddAREntryActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString(
+                    AddAREntryActivity.DESIRED_APP_STATE_KEY,
+                    "PLAYBACK"
+                )
+                bundle.putString(
+                    AddAREntryActivity.DESIRED_DATASET_PATH_KEY,
+                    requireArguments().getString("arVideoPath")
+                )
+                bundle.putBoolean(
+                    "fromAddEntry",
+                   true
+                )
+                intent.putExtras(bundle)
+
+                startActivity(intent)
+                println("button Clicked")
+
+            }
+        }
+        // set title from voice recording screen
+        if(voiceRecordedTitle!=null){
+            title.editText?.setText(voiceRecordedTitle)
         }
 
     }

@@ -1,12 +1,12 @@
 package hku.cs.lifearchive
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import java.util.Locale
 import java.util.Objects
 
@@ -89,6 +89,11 @@ class AddVoiceRecordingEntryActivity : AppCompatActivity() {
                 outputTV.setText(
                     Objects.requireNonNull(res)[0]
                 )
+
+                //go to addentry
+                val myIntent = Intent(this, MainActivity::class.java)
+                myIntent.putExtra("title",  Objects.requireNonNull(res)[0])
+                startActivity(myIntent)
             }
         }
     }
