@@ -229,28 +229,21 @@ class AddTextEntryFragment : Fragment() {
 
         // handling location input
         val locationInputText = view.findViewById<TextInputEditText>(R.id.location_input_text)
+        locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            geocoder.getFromLocation(nowlocation.latitude, nowlocation.longitude, 1, object: GeocodeListener {
-                override fun onGeocode(addresses: MutableList<Address>) {
-                    println("addresses: $addresses")
-                    if (addresses.size != 0) {
-                        locationInputText.setText(addresses[0].toString())
-                    } else {
-                        locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
-                    }
+            geocoder.getFromLocation(nowlocation.latitude, nowlocation.longitude, 1
+            ) { addresses ->
+                println("addresses: $addresses")
+                if (addresses.size != 0) {
+                    locationInputText.setText(addresses[0].getAddressLine(0).trim().dropLast(1))
                 }
-                override fun onError(error: String?) {
-                    locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
-                }
-            })
+            }
         } else {
             @Suppress("DEPRECATION")
             val addresses = geocoder.getFromLocation(nowlocation.latitude, nowlocation.longitude, 1)
             if (addresses?.size == 1) {
-                locationInputText.setText(addresses[0].toString())
-            } else {
-                locationInputText.setText("${nowlocation.latitude}, ${nowlocation.longitude}")
+                locationInputText.setText(addresses[0].getAddressLine(0).trim().dropLast(1))
             }
         }
 

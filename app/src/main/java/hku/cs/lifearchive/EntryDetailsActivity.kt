@@ -3,6 +3,7 @@ package hku.cs.lifearchive
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
@@ -19,10 +20,15 @@ class EntryDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_text_entry)
 
-//         toolbar
+        // toolbar
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        toolbar.title = intent.getStringExtra("title") ?: "Entry details"
+        toolbar.title = "Entry details"
+        // toolbar back button
+        if (supportActionBar != null){
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true);
+            supportActionBar!!.setDisplayShowHomeEnabled(true);
+        }
 
         val id = intent.getIntExtra("id", -1)
         if (id == -1) {
@@ -35,5 +41,12 @@ class EntryDetailsActivity : AppCompatActivity() {
         Scroller.arguments=bundle
 
         loadFragment(Scroller)
+    }
+    // toolbar back button
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

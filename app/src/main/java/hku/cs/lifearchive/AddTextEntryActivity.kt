@@ -1,11 +1,12 @@
 package hku.cs.lifearchive
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.widget.Toolbar
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
+
 
 class AddTextEntryActivity : AppCompatActivity() {
     private fun loadFragment(fragment: Fragment) {
@@ -32,5 +33,18 @@ class AddTextEntryActivity : AppCompatActivity() {
             var title = bundle!!.getString("title","") // 1
             loadFragment(AddTextEntryFragment.newInstance("",title))
         }
+
+        // toolbar back button
+        if (supportActionBar != null){
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true);
+            supportActionBar!!.setDisplayShowHomeEnabled(true);
+        }
+    }
+    // toolbar back button
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
