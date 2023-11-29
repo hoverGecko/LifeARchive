@@ -5,12 +5,12 @@
     <string name="add_entry_button_popup_menu_ar">AR</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string translatable="false" name="start_recording_button_text">START RECORDING</string>
-    <string translatable="false" name="stop_recording_button_text">STOP RECORDING</string>
-    <string translatable="false" name="playback_button_text">PLAYBACK</string>
-    <string translatable="false" name="playback_path_text">Playback: %1$s</string>
-    <string translatable="false" name="recording_path_text">Recording: %1$s</string>
-    <string translatable="false" name="change_anchor_model_text">CHANGE ANCHOR</string>
+    <string name="start_recording_button_text" translatable="false">START RECORDING</string>
+    <string name="stop_recording_button_text" translatable="false">STOP RECORDING</string>
+    <string name="playback_button_text" translatable="false">PLAYBACK</string>
+    <string name="playback_path_text" translatable="false">Playback: %1$s</string>
+    <string name="recording_path_text" translatable="false">Recording: %1$s</string>
+    <string name="change_anchor_model_text" translatable="false">CHANGE ANCHOR</string>
 
     <string name="change_anchor_model_menu_andy">Andy</string>
     <string name="change_anchor_model_menu_anchor">Anchor</string>

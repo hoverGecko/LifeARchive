@@ -12,14 +12,14 @@ import androidx.fragment.app.Fragment
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
 
-class ScrollingFragment : Fragment() {
+class EntryDetailsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_scrolling, container, false)
+        val view = inflater.inflate(R.layout.fragment_entry_details, container, false)
 
         val titleGet : TextView = view.findViewById(R.id.Titledetail)
         val contentGet: TextView = view.findViewById(R.id.Contentdetail)

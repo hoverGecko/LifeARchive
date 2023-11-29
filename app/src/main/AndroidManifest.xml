@@ -11,7 +11,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
  Limits app visibility in the Google Play Store to ARCore supported devices
          (https://developers.google.com/ar/devices).
@@ -38,6 +38,9 @@
         android:theme="@style/Theme.LifeARchive"
         tools:targetApi="31">
         <activity
+            android:name=".EntryDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddTextEntryActivity"
             android:exported="false" />
         <activity
@@ -48,7 +51,7 @@
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:screenOrientation="locked"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 

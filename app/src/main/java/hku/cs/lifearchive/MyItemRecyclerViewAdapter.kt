@@ -1,5 +1,6 @@
 package hku.cs.lifearchive
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -47,17 +48,10 @@ class MyItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         fun goToDetails(view: View, item: DiaryEntry) {
-            //TODO: make a view fragment for it
-            println("position")
-            val bundle = Bundle()
-            bundle.putInt("id",item.id)
-
-            val Scroller = ScrollingFragment()
-            Scroller.arguments=bundle
-
-            context1?.supportFragmentManager?.beginTransaction()
-                ?.replace(context1!!.findViewById<FrameLayout>(R.id.Frame).id,Scroller)
-                ?.commit();
+            val intent = Intent(context1, EntryDetailsActivity::class.java)
+            intent.putExtra("id", item.id)
+            intent.putExtra("title", item.title)
+            context1?.startActivity(intent)
         }
 
         holder.idView.text = item.title
