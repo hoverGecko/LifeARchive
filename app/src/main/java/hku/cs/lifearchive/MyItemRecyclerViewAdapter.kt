@@ -55,7 +55,7 @@ class MyItemRecyclerViewAdapter(
 
         holder.titleView.text = item.title
         //holder.contentView.text = item.content
-        holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm").format(item.date)
+        holder.dateView.text = SimpleDateFormat("dd/MM/yyyy HH:mm").format(item.date)
         holder.detailBtn.setOnClickListener {
             goToDetails(it, item)
         }

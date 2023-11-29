@@ -141,7 +141,7 @@ class AddTextEntryFragment : Fragment() {
 //        val nowlata = view.findViewById<TextView>(R.id.LatView)
         val ARPath = view.findViewById<TextView>(R.id.ARpath)
         val content = view.findViewById<TextInputLayout>(R.id.ContentInput)
-        val dates = Date()
+//        val dates = Date()
         var nowlocation  = hku.cs.lifearchive.diaryentrymodel.Location()
 //        nowdate.text = dates.toString()
 
@@ -265,7 +265,7 @@ class AddTextEntryFragment : Fragment() {
             diaryEntryDao.add(
                 DiaryEntry(title=titleText, content = content.editText?.text.toString(),
                     picturePaths = arrayListOf(imageUri?.toString()).filterNotNull(), voiceRecording = null,
-                arVideoPath = arVideoPath, location = nowlocation, date = dates
+                arVideoPath = arVideoPath, location = nowlocation, date = calendar.time
                 )
             )
             println("button Clicked")
