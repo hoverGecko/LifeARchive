@@ -5,7 +5,8 @@
     android:id="@+id/Constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTextEntryFragment">
+    tools:context=".AddTextEntryFragment"
+    android:paddingHorizontal="12dp">
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ class EntryDetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_entry_details, container, false)
 
         val titleGet : TextView = view.findViewById(R.id.Titledetail)
+        val contentHint: TextView = view.findViewById(R.id.content)
         val contentGet: TextView = view.findViewById(R.id.Contentdetail)
         val videotitle: TextView= view.findViewById(R.id.textView11)
         val playbutton: Button = view.findViewById(R.id.Playvideo)
@@ -43,15 +44,17 @@ class EntryDetailsFragment : Fragment() {
         val target = diaryEntryDao.getById(id)
         titleGet.text = target.title
         contentGet.text = target.content
+        if (target.content.isNullOrBlank()) {
+            contentHint.visibility = View.GONE
+            contentGet.visibility = View.GONE
+        }
 
         // photo
-        val item = target
-        val photoLayout: LinearLayout = view.findViewById(R.id.photo_layout)
         val photoView: ImageView = view.findViewById(R.id.photo_view)
-        if (item.picturePaths.isNotEmpty()) {
-            val photoUri = item.picturePaths[0]
+        if (target.picturePaths.isNotEmpty()) {
+            val photoUri = target.picturePaths[0]
             photoView.setImageURI(Uri.parse(photoUri))
-            photoLayout.visibility = View.VISIBLE
+            photoView.visibility = View.VISIBLE
         }
 
         if(target.arVideoPath == null){
@@ -84,10 +87,10 @@ class EntryDetailsFragment : Fragment() {
 
         // date
         val dateView: TextView = view.findViewById(R.id.date_detail)
-        dateView.text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(item.date)
+        dateView.text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(target.date)
 
         // location
-        val location = item.location
+        val location = target.location
         println("item.location: $location")
         val locationTextView: TextView = view.findViewById(R.id.location_detail)
         val geocoder = Geocoder(requireContext(), Locale.getDefault())

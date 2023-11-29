@@ -20,7 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="16dp"
+            android:background="@drawable/customborder"
+            android:backgroundTint="@color/material_dynamic_primary90">
+
+            <ImageView
+                android:id="@+id/photo_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="8dp"
+                android:scaleType="fitCenter"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/textView5"
@@ -45,33 +55,8 @@
 <!--                android:background="#AAAAAA"-->
 <!--                android:paddingVertical="10dp" />-->
 
-            <LinearLayout
-                android:id="@+id/photo_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <TextView
-                    android:id="@+id/photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:text="Photo"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-                <ImageView
-                    android:id="@+id/photo_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:visibility="gone"
-                    android:layout_margin="8dp"
-                    android:scaleType="fitCenter"
-                    android:background="@drawable/customborder"
-                    android:backgroundTint="@color/material_dynamic_primary95"/>
-            </LinearLayout>
-
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
@@ -106,7 +91,6 @@
                 android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
                 android:text="Location"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -123,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
-                android:text="Media"
+                android:text="AR Video"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
