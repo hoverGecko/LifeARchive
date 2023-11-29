@@ -30,6 +30,13 @@
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem" />
 
+        <ImageView
+            android:id="@+id/photo_view"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            android:layout_margin="@dimen/text_margin"/>
+
         <Button
             android:id="@+id/entry_view_btn"
             android:layout_width="wrap_content"
