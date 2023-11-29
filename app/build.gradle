@@ -66,4 +66,5 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
+    implementation 'androidx.activity:activity-ktx:1.7.0'
 }

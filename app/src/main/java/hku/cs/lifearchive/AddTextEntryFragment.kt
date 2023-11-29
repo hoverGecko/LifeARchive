@@ -11,17 +11,24 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Geocoder.GeocodeListener
 import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.HorizontalScrollView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
@@ -128,6 +135,7 @@ class AddTextEntryFragment : Fragment() {
         val doneButton= view.findViewById<FloatingActionButton>(R.id.Add)
         val ARbutton= view.findViewById<Button>(R.id.viewARbtn)
         val title= view.findViewById<TextInputLayout>(R.id.TitleInput)
+        title.requestFocus()
 //        val nowdate = view.findViewById<TextView>(R.id.Dateview)
 //        val nowlong = view.findViewById<TextView>(R.id.LongView)
 //        val nowlata = view.findViewById<TextView>(R.id.LatView)
@@ -156,7 +164,30 @@ class AddTextEntryFragment : Fragment() {
                 .show(requireActivity().supportFragmentManager, "timePicker")
         }
 
-
+        // handling photo
+        val addPhotoButton = view.findViewById<Button>(R.id.add_photo_btn)
+        val removePhotoButton = view.findViewById<Button>(R.id.remove_photo_btn)
+        val photoView = view.findViewById<ImageView>(R.id.photo_view)
+        var imageUri: Uri? = null
+        // initialize photo picker
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                photoView.setImageURI(uri)
+                imageUri = uri
+                photoView.visibility = View.VISIBLE
+                addPhotoButton.visibility = View.GONE
+                removePhotoButton.visibility = View.VISIBLE
+            }
+        }
+        addPhotoButton.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        removePhotoButton.setOnClickListener {
+            imageUri = null
+            photoView.visibility = View.GONE
+            addPhotoButton.visibility = View.VISIBLE
+            removePhotoButton.visibility = View.GONE
+        }
 
         //TODO: find ways to get current longtitude and latitude
         if (ActivityCompat.checkSelfPermission(
@@ -230,10 +261,17 @@ class AddTextEntryFragment : Fragment() {
 
         doneButton?.setOnClickListener {
             println(title.editText?.text)
+            var titleText = title.editText?.text.toString()
+            if (imageUri != null) {
+                requireContext().contentResolver.takePersistableUriPermission(imageUri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            if (titleText.isBlank()) {
+                titleText = "Untitled entry"
+            }
 
             diaryEntryDao.add(
-                DiaryEntry(title=title.editText?.text.toString(), content = content.editText?.text.toString(),
-                    picturePaths = ArrayList(), voiceRecording = null,
+                DiaryEntry(title=titleText, content = content.editText?.text.toString(),
+                    picturePaths = arrayListOf(imageUri?.toString()).filterNotNull(), voiceRecording = null,
                 arVideoPath = arVideoPath, location = nowlocation, date = dates
                 )
             )
