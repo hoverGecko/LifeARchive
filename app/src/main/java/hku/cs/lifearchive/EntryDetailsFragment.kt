@@ -53,8 +53,12 @@ class EntryDetailsFragment : Fragment() {
         val photoView: ImageView = view.findViewById(R.id.photo_view)
         if (target.picturePaths.isNotEmpty()) {
             val photoUri = target.picturePaths[0]
-            photoView.setImageURI(Uri.parse(photoUri))
-            photoView.visibility = View.VISIBLE
+            try {
+                photoView.setImageURI(Uri.parse(photoUri))
+                photoView.visibility = View.VISIBLE
+            } catch(e: Exception) {
+                println("EntryDetailsFragment setImageURI exception: $e")
+            }
         }
 
         if(target.arVideoPath == null){
