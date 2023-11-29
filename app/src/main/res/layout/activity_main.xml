@@ -4,35 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-    <ListView
-        android:id="@+id/entry_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/menu_tab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/list_list_tab"
-            android:icon="@drawable/baseline_menu_18"/>
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/list_map_tab"
-            android:icon="@android:drawable/ic_dialog_map"/>
-    </com.google.android.material.tabs.TabLayout>
+    tools:context=".MainActivity"
+    android:id="@+id/activity_main">
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/menu_new_entry"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/menu_tab"
-        app:layout_constraintRight_toRightOf="parent"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/add_button_content_description"/>
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="@color/material_dynamic_primary70"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/BottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/add" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/BottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_menu" />
+
+    <FrameLayout
+        android:id="@+id/Frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/BottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0">
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

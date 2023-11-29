@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">LifeARchive</string>
-    <string name="list_list_tab">List</string>
-    <string name="list_map_tab">Map</string>
-    <string name="add_button_content_description">Button for creating new diary entry</string>
+    <string name="add_entry_button_popup_menu_text_entry">Text</string>
+    <string name="add_entry_button_popup_menu_recording">Recording</string>
+    <string name="add_entry_button_popup_menu_ar">AR</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start_recording_button_text" translatable="false">START RECORDING</string>
+    <string name="stop_recording_button_text" translatable="false">STOP RECORDING</string>
+    <string name="playback_button_text" translatable="false">PLAYBACK</string>
+    <string name="playback_path_text" translatable="false">Playback: %1$s</string>
+    <string name="recording_path_text" translatable="false">Recording: %1$s</string>
+    <string name="change_anchor_model_text" translatable="false">CHANGE ANCHOR</string>
+
+    <string name="change_anchor_model_menu_andy">Andy</string>
+    <string name="change_anchor_model_menu_anchor">Anchor</string>
+    <string name="change_anchor_model_menu_bar">Bar</string>
 </resources>

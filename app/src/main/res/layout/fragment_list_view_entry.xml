@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
+    android:layout_marginHorizontal="10dp"
+    android:background="@drawable/customborder"
+    android:backgroundTint="@color/material_dynamic_primary90"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/text_horizontal_margin"
+        android:layout_marginVertical="@dimen/text_vertical_margin"
+        android:layout_weight="1"
+        android:text="date"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/text_horizontal_margin"
+        android:layout_marginVertical="4dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="22sp"
+        tools:text="Title Here" />
+
+
+    <TextView
+        android:id="@+id/content_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/text_horizontal_margin"
+        android:layout_marginVertical="4dp"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone"
+        tools:text="PLace holder Content" />
+
+    <ImageView
+        android:id="@+id/photo_view"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/text_horizontal_margin"
+        android:layout_marginVertical="@dimen/text_vertical_margin"/>
+
+</LinearLayout>
