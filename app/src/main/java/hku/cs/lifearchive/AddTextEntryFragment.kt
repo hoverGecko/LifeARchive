@@ -7,23 +7,18 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.util.Calendar
-import android.location.Address
 import android.location.Geocoder
-import android.location.Geocoder.GeocodeListener
 import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
@@ -100,7 +95,6 @@ class DatePickerFragment(
 class AddTextEntryFragment : Fragment() {
 
     val rc = 1
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     companion object {
@@ -189,7 +183,7 @@ class AddTextEntryFragment : Fragment() {
             removePhotoButton.visibility = View.GONE
         }
 
-        //TODO: find ways to get current longtitude and latitude
+        //getting permission
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -198,13 +192,8 @@ class AddTextEntryFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            // calling for permission
+            //TODO: find ways to call for permission at start of main activty, or close app if unable
             ActivityCompat.requestPermissions(requireActivity(),arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), rc)
             return
         }
@@ -227,7 +216,8 @@ class AddTextEntryFragment : Fragment() {
                 }
             }
 
-        // handling location input
+        // handling location input to output actual location name
+
         val locationInputText = view.findViewById<TextInputEditText>(R.id.location_input_text)
         locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
         val geocoder = Geocoder(requireContext(), Locale.getDefault())

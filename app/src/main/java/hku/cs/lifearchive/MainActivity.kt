@@ -1,21 +1,35 @@
 package hku.cs.lifearchive
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuInflater
 import android.widget.PopupMenu
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
+    val rc = 1
+
+    val PERMISSIONS = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+    )
+
+    private val multiplePermissionsContract: ActivityResultContracts.RequestMultiplePermissions? = null
+    private val multiplePermissionLauncher: ActivityResultLauncher<Array<String>>? = null
 
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -33,6 +47,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+    private fun startLocationPermissionRequest() {
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -40,8 +61,19 @@ class MainActivity : AppCompatActivity() {
         loadFragment(ListViewFragment())
         //init bottom app bar
         //request permission
-
-
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // calling for permission
+            //TODO: find ways to call for permission at start of main activty, or close app if unable
+            startLocationPermissionRequest()
+            return
+        }
         bottomBar = findViewById(R.id.BottomBar)
 
         fab = findViewById(R.id.fab)

@@ -1,16 +1,15 @@
 package hku.cs.lifearchive
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
 class EntryDetailsActivity : AppCompatActivity() {
     val dao = DiaryEntryDatabase.getDatabase(this@EntryDetailsActivity).dao()
+    //fragment loader
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container_view, fragment)

@@ -5,7 +5,6 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import hku.cs.lifearchive.databinding.FragmentListViewEntryBinding
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 
 
@@ -46,7 +44,7 @@ class MyItemRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        fun goToDetails(view: View, item: DiaryEntry) {
+        fun goToDetails( item: DiaryEntry) {
             val intent = Intent(context1, EntryDetailsActivity::class.java)
             intent.putExtra("id", item.id)
             intent.putExtra("title", item.title)
@@ -55,12 +53,17 @@ class MyItemRecyclerViewAdapter(
 
         holder.titleView.text = item.title
         //holder.contentView.text = item.content
+<<<<<<< Updated upstream
         holder.dateView.text = SimpleDateFormat("dd/MM/yyyy HH:mm").format(item.date)
         holder.detailBtn.setOnClickListener {
             goToDetails(it, item)
         }
+=======
+        holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm").format(item.date)
+
+>>>>>>> Stashed changes
         holder.card.setOnClickListener {
-            goToDetails(it, item)
+            goToDetails(item)
         }
 
         println("picturePaths: ${item.picturePaths}")
@@ -77,7 +80,7 @@ class MyItemRecyclerViewAdapter(
         val titleView: TextView = binding.titleView
         //val contentView: TextView = binding.content
         val dateView: TextView = binding.date
-        val detailBtn: Button = binding.entryViewBtn
+
         val contentView: TextView = binding.contentView
         val photoView: ImageView = binding.photoView
         val card: LinearLayout = binding.root
