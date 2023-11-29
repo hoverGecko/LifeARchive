@@ -33,11 +33,19 @@ class ItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
-        val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
-        //test entry
 
-        val datesorters = activity?.findViewById<Button>(R.id.Datesort)
-        val titlesorters = activity?.findViewById<Button>(R.id.Titlesort)
+        return view
+
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
+        val datesorters = view.findViewById<Button>(R.id.datesorter)
+        val titlesorters = view.findViewById<Button>(R.id.titlesorter)
         val allentry= diaryEntryDao.getAll().toMutableList()
 
         println("tester")
@@ -45,9 +53,10 @@ class ItemFragment : Fragment() {
         // Set the adapter
 
 
-
-        if (view is RecyclerView) {
-            with(view) { layoutManager = when {columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
+        val lister = view.findViewById<RecyclerView>(R.id.list)
+        if (lister is RecyclerView) {
+            println("listerer found")
+            with(lister) { layoutManager = when {columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
                 //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
                 adapter = MyItemRecyclerViewAdapter(allentry,activity)
 
@@ -70,12 +79,8 @@ class ItemFragment : Fragment() {
             }
 
         }
-        return view
-
-
 
     }
-
 
     companion object {
 
