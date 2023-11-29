@@ -22,12 +22,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -63,6 +66,7 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.core.examples.java.common.helpers.DisplayRotationHelper;
 import com.google.ar.core.examples.java.common.helpers.FullScreenHelper;
+import com.google.ar.core.examples.java.common.helpers.SnackbarHelper;
 import com.google.ar.core.examples.java.common.helpers.TapHelper;
 import com.google.ar.core.examples.java.common.helpers.TrackingStateHelper;
 import com.google.ar.core.examples.java.common.rendering.BackgroundRenderer;
@@ -116,7 +120,7 @@ public class AddAREntryActivity extends AppCompatActivity
         RECORDING,
         PLAYBACK
     }
-
+    private final SnackbarHelper messageSnackbarHelper = new SnackbarHelper();
     private static final String TAG = AddAREntryActivity.class.getSimpleName();
 
     // MP4 dataset naming convention: arcore-dataset-YYYY-MM-DD-hh-mm-ss.mp4
@@ -349,7 +353,7 @@ public class AddAREntryActivity extends AppCompatActivity
             }
 
             if (message != null) {
-
+                messageSnackbarHelper.showError(this, message + " " + exception);
                 Log.e(TAG, "Exception creating session", exception);
                 return;
             }
@@ -360,7 +364,7 @@ public class AddAREntryActivity extends AppCompatActivity
             // Playback will now start if an MP4 dataset has been set.
             session.resume();
         } catch (CameraNotAvailableException e) {
-
+            messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.");
             session = null;
             return;
         }
@@ -485,7 +489,8 @@ public class AddAREntryActivity extends AppCompatActivity
 
             // If not tracking, don't draw 3D objects, show tracking failure reason instead.
             if (camera.getTrackingState() == TrackingState.PAUSED) {
-
+                messageSnackbarHelper.showMessage(
+                        this, TrackingStateHelper.getTrackingFailureReasonString(camera));
                 return;
             }
 
@@ -512,7 +517,13 @@ public class AddAREntryActivity extends AppCompatActivity
 
             // No tracking failure at this point. If we detected any planes, then hide the
             // message UI. If not planes detected, show searching planes message.
-
+            if(currentState.get()==AppState.PLAYBACK){
+                messageSnackbarHelper.hide(this);
+            }else  if (hasTrackingPlane()  ) {
+                messageSnackbarHelper.showMessage(this, "Click on planes to create labels.");
+            } else {
+                messageSnackbarHelper.showMessage(this, SEARCHING_PLANE_MESSAGE);
+            }
 
             // Visualize detected planes.
             planeRenderer.drawPlanes(
@@ -951,7 +962,19 @@ public class AddAREntryActivity extends AppCompatActivity
                     "Failed to start recording, recording status is " + session.getRecordingStatus());
             return;
         }
-        setStateAndUpdateUI(AppState.RECORDING);
+        startRecordingButton.setEnabled(false);
+        startRecordingButton.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+
+        // to make sure camera is ready, wait 1s
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startRecordingButton.getBackground().setColorFilter(null);
+                setStateAndUpdateUI(AppState.RECORDING);
+            }
+        }, 1000);
+
+
     }
 
     /**
