@@ -983,7 +983,7 @@ public class AddAREntryActivity extends AppCompatActivity
     }
 
     private void sendRecordedPathToEntry() {
-        Intent myIntent = new Intent(this, MainActivity.class);
+        Intent myIntent = new Intent(this, AddTextEntryActivity.class);
         myIntent.putExtra("arVideoPath", playbackDatasetPath);
         startActivity(myIntent);
     }
