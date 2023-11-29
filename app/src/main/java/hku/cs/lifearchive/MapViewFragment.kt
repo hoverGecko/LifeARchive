@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
-class MapsFragment : Fragment() {
+class MapViewFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**

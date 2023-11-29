@@ -14,21 +14,19 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
-import java.security.Permissions
 import java.util.Date
 
-class AddEntryFragment : Fragment() {
+class AddTextEntryFragment : Fragment() {
 
     val rc = 1
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     companion object {
-        fun newInstance() = AddEntryFragment()
+        fun newInstance() = AddTextEntryFragment()
     }
 
 
@@ -41,7 +39,7 @@ class AddEntryFragment : Fragment() {
     ): View? {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        return inflater.inflate(R.layout.fragment_add_entry, container, false)
+        return inflater.inflate(R.layout.fragment_add_text_entry, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,7 +105,7 @@ class AddEntryFragment : Fragment() {
             )
             )
             println("button Clicked")
-            loadFragment(ItemFragment())
+            loadFragment(ListViewFragment())
         }
 
     }

@@ -16,15 +16,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomBar: BottomNavigationView
     private lateinit var fab: FloatingActionButton
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        loadFragment(ItemFragment())
+        loadFragment(ListViewFragment())
         //init bottom app bar
         bottomBar = findViewById(R.id.BottomBar)
 
@@ -34,12 +30,12 @@ class MainActivity : AppCompatActivity() {
         bottomBar.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_list -> {
-                    loadFragment(ItemFragment())
+                    loadFragment(ListViewFragment())
                     true
                 }
 
                 R.id.menu_map -> {
-                    loadFragment(MapsFragment())
+                    loadFragment(MapViewFragment())
                     true
                 }
 
@@ -62,18 +58,18 @@ class MainActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.add_normal_entry -> {
-                        loadFragment(AddEntryFragment())
+                        loadFragment(AddTextEntryFragment())
                         true
                     }
 
                     R.id.add_recording_entry -> {
-                        val intent = Intent(this, VoiceRecordingActivity::class.java)
+                        val intent = Intent(this, AddVoiceRecordingEntryActivity::class.java)
                         startActivity(intent)
                         true
                     }
 
                     R.id.add_ar_entry -> {
-                        val intent = Intent(this, HelloRecordingPlaybackActivity::class.java)
+                        val intent = Intent(this, AddAREntryActivity::class.java)
                         startActivity(intent)
                         true
                     }

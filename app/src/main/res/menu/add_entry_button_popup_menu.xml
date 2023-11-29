@@ -3,7 +3,7 @@
     <item
         android:id="@+id/add_normal_entry"
         android:icon="@drawable/menu_24px"
-        android:title="@string/add_entry_button_popup_menu_normal" />
+        android:title="@string/add_entry_button_popup_menu_text_entry" />
     <item
         android:id="@+id/add_recording_entry"
         android:icon="@drawable/mic_24px"

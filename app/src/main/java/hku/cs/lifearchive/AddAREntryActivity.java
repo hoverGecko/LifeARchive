@@ -78,7 +78,6 @@ import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationExceptio
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -101,7 +100,7 @@ import org.joda.time.DateTime;
  *       recorded in a separate MP4 data track, so that the taps can be replayed during playback.
  * </ul>
  */
-public class HelloRecordingPlaybackActivity extends AppCompatActivity
+public class AddAREntryActivity extends AppCompatActivity
     implements GLSurfaceView.Renderer {
   // Application states.
   private enum AppState {
@@ -110,7 +109,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     PLAYBACK
   }
 
-  private static final String TAG = HelloRecordingPlaybackActivity.class.getSimpleName();
+  private static final String TAG = AddAREntryActivity.class.getSimpleName();
 
   // MP4 dataset naming convention: arcore-dataset-YYYY-MM-DD-hh-mm-ss.mp4
   private static final String MP4_DATASET_FILENAME_TEMPLATE = "arcore-dataset-%s.mp4";
@@ -188,7 +187,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
   private int width, height;
   private RelativeLayout mainLayout;
-  public static HelloRecordingPlaybackActivity helloRecordingPlaybackActivity;
+  public static AddAREntryActivity addAREntryActivity;
   public ArrayList<TextView> labels = new ArrayList<>();
   public ArrayList<TextView> labelsNext = new ArrayList<>();
 
@@ -197,8 +196,8 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     loadInternalStateFromIntentExtras();
 
-    setContentView(R.layout.activity_ar_recording);
-    helloRecordingPlaybackActivity=this;
+    setContentView(R.layout.activity_add_ar_entry);
+    addAREntryActivity =this;
     mainLayout = findViewById(R.id.arlayout);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
@@ -506,7 +505,7 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
           @Override
           public void run() {
             // Stuff that updates the UI
-            TextView textView = new TextView(helloRecordingPlaybackActivity);
+            TextView textView = new TextView(addAREntryActivity);
 
 
             textView.setText(coloredAnchor.label);
@@ -589,11 +588,11 @@ public class HelloRecordingPlaybackActivity extends AppCompatActivity
 
                           @Override
                           public void run() {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(helloRecordingPlaybackActivity);
+                            AlertDialog.Builder alert = new AlertDialog.Builder(addAREntryActivity);
 
                             alert.setTitle("Add an anchor");
 
-                            final EditText input = new EditText(helloRecordingPlaybackActivity);
+                            final EditText input = new EditText(addAREntryActivity);
                             alert.setView(input);
                             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                               public void onClick(DialogInterface dialog, int whichButton) {

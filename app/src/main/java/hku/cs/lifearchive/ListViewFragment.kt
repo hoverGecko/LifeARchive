@@ -9,15 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
-import hku.cs.lifearchive.diaryentrymodel.Location
-import java.util.Date
 
 /**
  * A fragment representing a list of Items.
  */
-class ItemFragment : Fragment() {
+class ListViewFragment : Fragment() {
 
     private var columnCount = 1
 
@@ -35,13 +32,13 @@ class ItemFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_item_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_list_view_list, container, false)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
         //test entry
-        diaryEntryDao.add(DiaryEntry(1,title="Check", content = "Content Test",
-            picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
-            arVideoPath = null, location = Location(), date = Date()
-        ))
+//        diaryEntryDao.add(DiaryEntry(1,title="Check", content = "Content Test",
+//            picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
+//            arVideoPath = null, location = Location(), date = Date()
+//        ))
         val datesorters = activity?.findViewById<Button>(R.id.Datesort)
         val titlesorters = activity?.findViewById<Button>(R.id.Titlesort)
         val allentry= diaryEntryDao.getAll().toMutableList()
@@ -57,21 +54,17 @@ class ItemFragment : Fragment() {
                 //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
                 adapter = MyItemRecyclerViewAdapter(allentry,activity)
 
-                if (datesorters != null) {
-                    datesorters.setOnClickListener{
-                        allentry.sortBy {it.date}
-                        println("timesorted")
-                        println(allentry)
-                        adapter = MyItemRecyclerViewAdapter(allentry,activity)
-                    }
+                datesorters?.setOnClickListener{
+                    allentry.sortBy {it.date}
+                    println("timesorted")
+                    println(allentry)
+                    adapter = MyItemRecyclerViewAdapter(allentry,activity)
                 }
-                if (titlesorters != null) {
-                    titlesorters.setOnClickListener{
-                        allentry.sortBy {it.title}
-                        println("titlesorted")
-                        println(allentry)
-                        adapter = MyItemRecyclerViewAdapter(allentry,activity)
-                    }
+                titlesorters?.setOnClickListener{
+                    allentry.sortBy {it.title}
+                    println("titlesorted")
+                    println(allentry)
+                    adapter = MyItemRecyclerViewAdapter(allentry,activity)
                 }
             }
 
@@ -91,7 +84,7 @@ class ItemFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            ItemFragment().apply {
+            ListViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

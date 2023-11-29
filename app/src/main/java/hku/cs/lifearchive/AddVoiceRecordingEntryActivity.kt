@@ -10,7 +10,7 @@ import android.widget.Toast
 import java.util.Locale
 import java.util.Objects
 
-class VoiceRecordingActivity : AppCompatActivity() {
+class AddVoiceRecordingEntryActivity : AppCompatActivity() {
 
     // on below line we are creating variables
     // for text view and image view
@@ -22,7 +22,7 @@ class VoiceRecordingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_voice_recording)
+        setContentView(R.layout.activity_add_recording_entry)
 
         // initializing variables of list view with their ids.
         outputTV = findViewById(R.id.idTVOutput)
@@ -61,7 +61,7 @@ class VoiceRecordingActivity : AppCompatActivity() {
                 // on below line we are displaying error message in toast
                 Toast
                     .makeText(
-                        this@VoiceRecordingActivity, " " + e.message,
+                        this@AddVoiceRecordingEntryActivity, " " + e.message,
                         Toast.LENGTH_SHORT
                     )
                     .show()

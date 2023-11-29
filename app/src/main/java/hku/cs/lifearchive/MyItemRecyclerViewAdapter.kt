@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import hku.cs.lifearchive.databinding.FragmentItemBinding
+import hku.cs.lifearchive.databinding.FragmentListViewEntryBinding
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import java.text.SimpleDateFormat
 
@@ -31,7 +31,7 @@ class MyItemRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     
         return ViewHolder(
-            FragmentItemBinding.inflate(
+            FragmentListViewEntryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -64,13 +64,11 @@ class MyItemRecyclerViewAdapter(
 
 
     }
-    inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: FragmentListViewEntryBinding) : RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber
         //val contentView: TextView = binding.content
         val dateView: TextView = binding.date
-        val detailview: Button = binding.button2
-
-
+        val detailview: Button = binding.entryViewBtn
     }
 
 
