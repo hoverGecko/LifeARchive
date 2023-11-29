@@ -10,4 +10,9 @@
     <string translatable="false" name="playback_button_text">PLAYBACK</string>
     <string translatable="false" name="playback_path_text">Playback: %1$s</string>
     <string translatable="false" name="recording_path_text">Recording: %1$s</string>
+    <string translatable="false" name="change_anchor_model_text">CHANGE ANCHOR</string>
+
+    <string name="change_anchor_model_menu_andy">Andy</string>
+    <string name="change_anchor_model_menu_anchor">Anchor</string>
+    <string name="change_anchor_model_menu_bar">Bar</string>
 </resources>
