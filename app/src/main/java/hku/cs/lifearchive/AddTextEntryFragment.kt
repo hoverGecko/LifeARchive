@@ -29,9 +29,6 @@ class AddTextEntryFragment : Fragment() {
         fun newInstance() = AddTextEntryFragment()
     }
 
-
-
-
     override fun onCreateView(
 
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,12 +97,13 @@ class AddTextEntryFragment : Fragment() {
 
             diaryEntryDao.add(
                 DiaryEntry(title=title.editText?.text.toString(), content = content.editText?.text.toString(),
-                picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
-                arVideoPath = null, location = nowlocation, date = dates
-            )
+                    picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
+                    arVideoPath = null, location = nowlocation, date = dates
+                )
             )
             println("button Clicked")
-            loadFragment(ListViewFragment())
+
+            activity?.finish()
         }
 
     }
@@ -123,9 +121,9 @@ class AddTextEntryFragment : Fragment() {
             }
         }
     }
-    private fun loadFragment(fragment: Fragment){
-        val transaction = activity?.supportFragmentManager?.beginTransaction()
-        transaction?.replace(this.id, fragment)
-        transaction?.commit()
-    }
+//    private fun loadFragment(fragment: Fragment){
+//        val transaction = activity?.supportFragmentManager?.beginTransaction()
+//        transaction?.replace(this.id, fragment)
+//        transaction?.commit()
+//    }
 }

@@ -37,40 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TestTop"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
-
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/TestTop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:id="@+id/Datesort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sort By Date"
-            android:drawableLeft="@drawable/baseline_sort_24"
-            android:backgroundTint="@color/material_dynamic_primary40"
-            android:drawableTint="@color/material_on_primary_emphasis_medium"
-            android:layout_margin="4dp"/>
-
-        <Button
-            android:id="@+id/Titlesort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/baseline_sort_24"
-            android:backgroundTint="@color/material_dynamic_primary40"
-            android:drawableTint="@color/material_on_primary_emphasis_medium"
-            android:text="Sort by Title" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

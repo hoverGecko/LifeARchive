@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.add_normal_entry -> {
-                        loadFragment(AddTextEntryFragment())
+                        val intent = Intent(this, AddTextEntryActivity::class.java)
+                        startActivity(intent)
                         true
                     }
 
@@ -78,6 +79,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             popup.show()
+        }
+    }
+
+    // refresh
+    override fun onResume() {
+        super.onResume()
+        bottomBar = findViewById(R.id.BottomBar)
+        when (bottomBar.selectedItemId) {
+            R.id.menu_list -> {
+                loadFragment(ListViewFragment())
+            }
+            R.id.menu_map -> {
+                loadFragment(MapViewFragment())
+            }
         }
     }
 

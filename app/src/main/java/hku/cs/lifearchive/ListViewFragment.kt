@@ -32,47 +32,40 @@ class ListViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_list_view_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_list_view, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.list_view_recycler_view)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
         //test entry
 //        diaryEntryDao.add(DiaryEntry(1,title="Check", content = "Content Test",
 //            picturePaths = arrayListOf("1,2,","testpath"), voiceRecording = null,
 //            arVideoPath = null, location = Location(), date = Date()
 //        ))
-        val datesorters = activity?.findViewById<Button>(R.id.Datesort)
-        val titlesorters = activity?.findViewById<Button>(R.id.Titlesort)
-        val allentry= diaryEntryDao.getAll().toMutableList()
+        val dateSortBtn = view.findViewById<Button>(R.id.date_sort_btn)
+        val titleSortBtn = view.findViewById<Button>(R.id.title_sort_btn)
+        val allEntries= diaryEntryDao.getAll().toMutableList()
 
         println("tester")
-        println(allentry)
+        println(allEntries)
+
         // Set the adapter
-
-
-
-        if (view is RecyclerView) {
-            with(view) { layoutManager = when {columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
-                //adapter = MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS)
-                adapter = MyItemRecyclerViewAdapter(allentry,activity)
-
-                datesorters?.setOnClickListener{
-                    allentry.sortBy {it.date}
-                    println("timesorted")
-                    println(allentry)
-                    adapter = MyItemRecyclerViewAdapter(allentry,activity)
-                }
-                titlesorters?.setOnClickListener{
-                    allentry.sortBy {it.title}
-                    println("titlesorted")
-                    println(allentry)
-                    adapter = MyItemRecyclerViewAdapter(allentry,activity)
-                }
+        with(recyclerView) {
+            layoutManager = when { columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
+            adapter = MyItemRecyclerViewAdapter(allEntries,activity)
+            dateSortBtn?.setOnClickListener{
+                allEntries.sortBy {it.date}
+                println("timesorted")
+                println(allEntries)
+                adapter = MyItemRecyclerViewAdapter(allEntries,activity)
             }
-
+            titleSortBtn?.setOnClickListener{
+                allEntries.sortBy {it.title}
+                println("titlesorted")
+                println(allEntries)
+                adapter = MyItemRecyclerViewAdapter(allEntries,activity)
+            }
         }
+
         return view
-
-
-
     }
 
 
