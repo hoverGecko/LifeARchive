@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +44,7 @@ class ListViewFragment : Fragment() {
         val dateSortBtn = view.findViewById<Button>(R.id.date_sort_btn)
         val titleSortBtn = view.findViewById<Button>(R.id.title_sort_btn)
         val allEntries= diaryEntryDao.getAll().toMutableList()
+
 
         println("tester")
         println(allEntries)

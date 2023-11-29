@@ -3,7 +3,9 @@ package hku.cs.lifearchive
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.MaterialToolbar
 
 class AddTextEntryActivity : AppCompatActivity() {
     private fun loadFragment(fragment: Fragment) {
@@ -14,6 +16,11 @@ class AddTextEntryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_text_entry)
+
+        // toolbar
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         // by Henry: to receive the AR video path just recorded and send to fragment
         if(intent.hasExtra("arVideoPath")){
             var bundle :Bundle ?= intent.extras
