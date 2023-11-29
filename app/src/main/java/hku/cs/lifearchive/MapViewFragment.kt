@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 
 class MapViewFragment : Fragment() {
@@ -46,21 +49,51 @@ class MapViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mapper =view.findViewById<MapView>(R.id.map2)
         mapper.onCreate(savedInstanceState)
+        var mapsearchview = view.findViewById<SearchView>(R.id.searchView)
+
         mapper.getMapAsync {
             this.googleMap = it
             val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
             val allentry = diaryEntryDao.getAll()
-            for (entry in allentry){
-                val longs = entry.location?.longitude
-                val lats = entry.location?.latitude
-                val positions =  LatLng(lats!!, longs!!)
+            mapsearchview.queryHint = "Search by Title"
+            mapsearchview.setOnQueryTextListener(object : OnQueryTextListener,
+                SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(newText: String): Boolean {
+                    println("text changed")
+                    return false
+                }
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    // task HERE
+                    googleMap.clear()
 
-                googleMap.addMarker(MarkerOptions().position(positions).title(entry.title))
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(positions))
-            }
+                    println("text submitted")
+                    if (query == null){
+                        markerplacer(allentry,googleMap)
+                    }else{
+                        var result = allentry.filter { item -> item.title.contains(query) }
+                        markerplacer(result,googleMap)
+                    }
+                    return false
+                }
+            })
+            markerplacer(allentry,googleMap)
+
 
         }
 
 
+
+
     }
+    private fun markerplacer(allentry: List<DiaryEntry>, googleMap: GoogleMap) {
+        for (entry in allentry){
+            val longs = entry.location?.longitude
+            val lats = entry.location?.latitude
+            val positions =  LatLng(lats!!, longs!!)
+
+            googleMap.addMarker(MarkerOptions().position(positions).title(entry.title))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positions,10.0f))
+        }
+    }
+
 }
