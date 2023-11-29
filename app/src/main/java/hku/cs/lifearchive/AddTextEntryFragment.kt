@@ -36,7 +36,6 @@ import com.google.android.material.textfield.TextInputLayout
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntry
 import hku.cs.lifearchive.diaryentrymodel.DiaryEntryDatabase
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 // https://developer.android.com/develop/ui/views/components/pickers#DatePicker
@@ -141,7 +140,7 @@ class AddTextEntryFragment : Fragment() {
 
         // handling date and time input
         val calendar = Calendar.getInstance()
-
+        val locationInputText = view.findViewById<TextInputEditText>(R.id.location_input_text)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         val timeFormat = SimpleDateFormat("HH:mm:ss")
         val dateInputText = view.findViewById<TextInputEditText>(R.id.date_input_text)
@@ -209,7 +208,7 @@ class AddTextEntryFragment : Fragment() {
                     nowlocation.longitude = location.longitude
                     println(location.latitude)
                     println(location.longitude)
-
+                    locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
                 }else
                 {
                     println("null location")
@@ -218,8 +217,8 @@ class AddTextEntryFragment : Fragment() {
 
         // handling location input to output actual location name
 
-        val locationInputText = view.findViewById<TextInputEditText>(R.id.location_input_text)
-        locationInputText.setText("(${nowlocation.latitude}, ${nowlocation.longitude})")
+
+        //TODO: find way to get this to work inside on success listener of fusedLocationClient cuz it is async
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             geocoder.getFromLocation(nowlocation.latitude, nowlocation.longitude, 1
