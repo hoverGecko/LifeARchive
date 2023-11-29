@@ -53,15 +53,12 @@ class MyItemRecyclerViewAdapter(
 
         holder.titleView.text = item.title
         //holder.contentView.text = item.content
-<<<<<<< Updated upstream
+
         holder.dateView.text = SimpleDateFormat("dd/MM/yyyy HH:mm").format(item.date)
-        holder.detailBtn.setOnClickListener {
-            goToDetails(it, item)
-        }
-=======
+
+
         holder.dateView.text = SimpleDateFormat("dd/MM/yyyy hh:mm").format(item.date)
 
->>>>>>> Stashed changes
         holder.card.setOnClickListener {
             goToDetails(item)
         }

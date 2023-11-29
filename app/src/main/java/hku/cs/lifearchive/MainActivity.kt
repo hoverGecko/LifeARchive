@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuInflater
 import android.widget.PopupMenu
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -23,13 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     val rc = 1
 
-    val PERMISSIONS = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-    )
 
-    private val multiplePermissionsContract: ActivityResultContracts.RequestMultiplePermissions? = null
-    private val multiplePermissionLauncher: ActivityResultLauncher<Array<String>>? = null
 
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -38,19 +32,26 @@ class MainActivity : AppCompatActivity() {
             if (isGranted) {
                 // Permission is granted. Continue the action or workflow in your
                 // app.
+                this.recreate()
             } else {
                 // Explain to the user that the feature is unavailable because the
                 // feature requires a permission that the user has denied. At the
                 // same time, respect the user's decision. Don't link to system
                 // settings in an effort to convince the user to change their
                 // decision.
+                AlertDialog.Builder(this)
+                    .setTitle("Insuffcient Permission")
+                    .setMessage("Insuffcient permission will make the App unable to run properly. Please try again and grant the required permissions in the setting. ")
+                    .create()
+                    .show()
             }
         }
 
 
     private fun startLocationPermissionRequest() {
-        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
     }
 
 
