@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.widget.Toolbar
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +34,11 @@ class ListViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_list_view, container, false)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val recyclerView: RecyclerView = view.findViewById(R.id.list_view_recycler_view)
         val diaryEntryDao = DiaryEntryDatabase.getDatabase(requireContext()).dao()
         //test entry
@@ -43,31 +48,74 @@ class ListViewFragment : Fragment() {
 //        ))
         val dateSortBtn = view.findViewById<Button>(R.id.date_sort_btn)
         val titleSortBtn = view.findViewById<Button>(R.id.title_sort_btn)
+        val listsearchview = view.findViewById<SearchView>(R.id.list_view_search_view)
         val allEntries= diaryEntryDao.getAll().toMutableList()
-
-
+        var searchentries = allEntries
+        var datebtnpushed = false
+        var titlebtnpushed = false
         println("tester")
         println(allEntries)
+        recyclerView.adapter = MyItemRecyclerViewAdapter(searchentries,activity)
 
-        // Set the adapter
+        listsearchview.queryHint = "Search by Title"
+        listsearchview.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener,
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                println("text changed")
+                if (newText == null){
+                    searchentries = allEntries
+
+                }else{
+                    searchentries = allEntries.filter { item -> item.title.contains(newText) }.toMutableList()
+                }
+                recyclerView.adapter = MyItemRecyclerViewAdapter(searchentries,activity)
+                return false
+            }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                return false
+            }
+        })
+
         with(recyclerView) {
             layoutManager = when { columnCount <= 1 -> LinearLayoutManager(context) else -> GridLayoutManager(context, columnCount) }
             adapter = MyItemRecyclerViewAdapter(allEntries,activity)
             dateSortBtn?.setOnClickListener{
-                allEntries.sortBy {it.date}
-                println("timesorted")
-                println(allEntries)
-                adapter = MyItemRecyclerViewAdapter(allEntries,activity)
+
+                if(datebtnpushed == false){
+                    datebtnpushed = true
+                    searchentries.sortBy {it.date}
+                    println("timesorted")
+                    println(searchentries)
+                    adapter = MyItemRecyclerViewAdapter(searchentries,activity)
+
+                }else{
+                    datebtnpushed = false
+                    searchentries.sortByDescending {it.date}
+                    println("timesorted by Descending")
+                    println(searchentries)
+                    adapter = MyItemRecyclerViewAdapter(searchentries,activity)
+                }
+
             }
             titleSortBtn?.setOnClickListener{
-                allEntries.sortBy {it.title}
-                println("titlesorted")
-                println(allEntries)
-                adapter = MyItemRecyclerViewAdapter(allEntries,activity)
+                if(titlebtnpushed == false){
+                    titlebtnpushed = true
+                    searchentries.sortBy {it.title}
+                    println("titlesorted")
+                    println(searchentries)
+                    adapter = MyItemRecyclerViewAdapter(searchentries,activity)
+                }else{
+                    titlebtnpushed = false
+                    searchentries.sortByDescending {it.title}
+                    println("titlesorted by Descending")
+                    println(searchentries)
+                    adapter = MyItemRecyclerViewAdapter(searchentries,activity)
+                }
+
             }
         }
 
-        return view
     }
 
 
