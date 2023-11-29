@@ -972,7 +972,7 @@ public class AddAREntryActivity extends AppCompatActivity
                 startRecordingButton.getBackground().setColorFilter(null);
                 setStateAndUpdateUI(AppState.RECORDING);
             }
-        }, 1000);
+        }, 500);
 
 
     }
