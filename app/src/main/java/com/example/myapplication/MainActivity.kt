@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private var tapHelper: TapHelper? = null
     private lateinit var surfaceView: GLSurfaceView
 
-    // The Renderers are created here, and initialized when the GL surface is created.
     private val backgroundRenderer = BackgroundRenderer()
     private val virtualObject = ObjectRenderer()
     private val virtualObjectShadow = ObjectRenderer()
@@ -82,7 +81,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private class ColoredAnchor(val anchor: Anchor, val color: FloatArray)
 
     private val anchors = ArrayList<ColoredAnchor>()
-    private val anchorsToBeRecorded = ArrayList<ColoredAnchor>()
     private var installRequested = false
 
     private val REQUIRED_PERMISSIONS_FOR_ANDROID_S_AND_BELOW = arrayOf(
@@ -91,7 +89,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private val REQUIRED_PERMISSIONS_FOR_ANDROID_T_AND_ABOVE = arrayOf(
         permission.CAMERA, permission.READ_MEDIA_VIDEO
     )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -102,13 +99,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         tapHelper = TapHelper( /*context=*/this)
         surfaceView.setOnTouchListener(tapHelper)
 
-        // Set up renderer.
         surfaceView.setPreserveEGLContextOnPause(true)
         surfaceView.setEGLContextClientVersion(2)
-        surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0) // Alpha used for plane blending.
         surfaceView.setRenderer(this)
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY)
-        surfaceView.setWillNotDraw(false)
         installRequested = false
 
     }
@@ -127,9 +121,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
                     InstallStatus.INSTALLED -> {}
                 }
-
-                // If we did not yet obtain runtime permission on Android M and above, now is a good time to
-                // ask the user for it.
                 if (requestPermissions(permissionsForTargetSDK)) {
                     return
                 }
@@ -164,7 +155,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
         try {
-            // Playback will now start if an MP4 dataset has been set.
             session!!.resume()
         } catch (e: CameraNotAvailableException) {
             messageSnackbarHelper.showError(this, "Camera not available. Try restarting the app.")
@@ -175,7 +165,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         surfaceView!!.onResume()
         displayRotationHelper!!.onResume()
     }
-
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
@@ -199,14 +188,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
             Log.e("Test", "Failed to read an asset file", e)
         }
     }
-
     override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
         displayRotationHelper!!.onSurfaceChanged(width, height)
         GLES20.glViewport(0, 0, width, height)
     }
 
     override fun onDrawFrame(gl: GL10) {
-        // Clear screen to tell driver it should not load any pixels from previous frame.
+        // Clear screen.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
 
         // Do not render anything or call session methods until session is created.
@@ -220,18 +208,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         try {
             session!!.setCameraTextureName(backgroundRenderer.textureId)
 
-            // Obtain the current frame from ARSession. When the configuration is set to
-            // UpdateMode.BLOCKING (it is by default), this will throttle the rendering to the
-            // camera framerate.
             val frame = session!!.update()
             val camera = frame.camera
 
             // Handle one tap per frame.
-            val anchor = handleTap(frame, camera)
-            if (anchor != null) {
-                // If we created an anchor, then try to record it.
-                anchorsToBeRecorded.add(anchor)
-            }
+            handleTap(frame, camera)
 
             // If frame is ready, render camera preview image to the GL surface.
             backgroundRenderer.draw(frame)
@@ -246,7 +227,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
                 )
                 return
             }
-
             // Get projection matrix.
             val projmtx = FloatArray(16)
             camera.getProjectionMatrix(projmtx, 0, 0.1f, 100.0f)
@@ -277,7 +257,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
             planeRenderer.drawPlanes(
                 session!!.getAllTrackables(Plane::class.java), camera.displayOrientedPose, projmtx
             )
-
             // Visualize anchors created by tapping.
             val scaleFactor = 1.0f
             for (coloredAnchor in anchors) {
@@ -299,8 +278,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
             Log.e("Test", "Exception on the OpenGL thread", t)
         }
     }
-
-    /** Try to create an anchor if the user has tapped the screen.  */
     private fun handleTap(frame: Frame, camera: Camera): ColoredAnchor? {
         // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
         val tap = tapHelper!!.poll()
@@ -318,28 +295,15 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
                             && trackable.orientationMode
                             == Point.OrientationMode.ESTIMATED_SURFACE_NORMAL)
                 ) {
-                    // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
-                    // Cap the number of objects created. This avoids overloading both the
-                    // rendering system and ARCore.
                     if (anchors.size >= 20) {
                         anchors[0].anchor.detach()
                         anchors.removeAt(0)
                     }
 
-                    // Assign a color to the object for rendering based on the trackable type
-                    // this anchor attached to.
+                    // Assign a color to the object
                     val objColor: FloatArray
-                    objColor = if (trackable is Point) {
-                        floatArrayOf(66.0f, 133.0f, 244.0f, 255.0f) // Blue.
-                    } else if (trackable is Plane) {
-                        floatArrayOf(139.0f, 195.0f, 74.0f, 255.0f) // Green.
-                    } else {
-                        floatArrayOf(0f, 0f, 0f, 0f)
-                    }
+                    objColor = floatArrayOf(66.0f, 133.0f, 244.0f, 255.0f) // Blue.
                     val anchor = ColoredAnchor(hit.createAnchor(), objColor)
-                    // Adding an Anchor tells ARCore that it should track this position in
-                    // space. This anchor is created on the Plane to place the 3D model
-                    // in the correct position relative both to the world and to the plane.
                     anchors.add(anchor)
                     return anchor
                 }
@@ -347,10 +311,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         }
         return null
     }
-
-
-
-    /** Checks if we detected at least one plane.  */
     private fun hasTrackingPlane(): Boolean {
         for (plane in session!!.getAllTrackables(
             Plane::class.java
@@ -361,14 +321,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         }
         return false
     }
-
-    /**
-     * Requests any not (yet) granted required permissions needed for recording and playback.
-     *
-     *
-     * Returns false if all permissions are already granted. Otherwise, requests missing
-     * permissions and returns true.
-     */
     private fun requestPermissions(permissions: Array<String>): Boolean {
         val permissionsNotGranted: MutableList<String> = ArrayList()
         for (permission in permissions) {
@@ -386,16 +338,9 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         )
         return true
     }
-
-
-
-    /** Helper function to log error message and show it on the screen.  */
     private fun logAndShowErrorMessage(errorMessage: String) {
         messageSnackbarHelper.showError(this, errorMessage)
     }
-
-
-
     private val permissionsForTargetSDK: Array<String>
         private get() {
             val targetSdkVersion = this.applicationInfo.targetSdkVersion
